@@ -30,7 +30,7 @@ LoFoNet is a community-driven Lost & Found web application that allows users to 
 ![Add Report Page](screenshots/add.png)
 
 ### 📋 My Reports
-![My Reports Page](screenshots/reports.png)
+![My Reports Page](screenshots/myreport.png)
 
 ### 🔐 Login Page
 ![Login Page](screenshots/login.png)
