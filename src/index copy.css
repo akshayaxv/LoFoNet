@@ -1,0 +1,10 @@
+/* Light Theme (default) */
+body {
+  background-color: #fffaf3;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+a {
+  color: #EB6424;
+}
