@@ -1,4 +1,4 @@
-# 🧭 LoFoNet – Lost & Found Portal
+# 🧭 LoFoNet – Lost & Found Network
 
 LoFoNet is a community-driven Lost & Found web application that allows users to report and search for lost or found items. The platform aims to help reconnect people with their belongings through a clean interface, real-time updates, and easy reporting.
 
@@ -21,7 +21,6 @@ LoFoNet is a community-driven Lost & Found web application that allows users to 
 
 ## 📸 Screenshots
 
-> *(Make sure you place actual image files in a `/screenshots` folder)*
 
 ### 🏠 Home Page
 ![Home Page](screenshots/home.png)
@@ -49,7 +48,7 @@ LoFoNet is a community-driven Lost & Found web application that allows users to 
 ### 🔧 Backend & Hosting
 - Firebase Authentication
 - Firebase Firestore
-- (Optional) Netlify / Vercel for Deployment
+
 
 
 
