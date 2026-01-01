@@ -39,15 +39,18 @@ LoFoNet is a community-driven Lost & Found web application that allows users to 
 ## 🛠️ Tech Stack Used
 
 ### 📦 Frontend
-- React
-- React Router DOM
-- React Icons
-- React Toastify
-- React TSParticles
+-Runtime Environment: React 18, TypeScript 5 (Strict Mode)
+-State Management: React Context API + Custom Hooks
+-Styling Engine: Tailwind CSS (Utility-First) + Shadcn UI (Component Primitives)
+-Build Pipeline: Vite (ESBuild)
+-Persistence Layer: PostgreSQL (Neon Serverless)
+-Object Storage: ImgBB API (CDN Distribution)
+
 
 ### 🔧 Backend & Hosting
-- Firebase Authentication
-- Firebase Firestore
+-Node.js Runtime: v18.x or higher
+=Package Manager: NPM v9.x or higher
+=Database: PostgreSQL connection string (Neon.tech recommended)
 
 
 
