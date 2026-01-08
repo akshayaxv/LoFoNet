@@ -16,12 +16,12 @@ export function RecentReports({ reports }: RecentReportsProps) {
     <section className="mb-10">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">أحدث البلاغات</h2>
-          <p className="text-muted-foreground mt-1">تابع آخر البلاغات المسجلة</p>
+          <h2 className="text-2xl font-bold text-foreground">Recent Reports</h2>
+          <p className="text-muted-foreground mt-1">Follow the latest registered reports</p>
         </div>
         <Link to="/reports">
           <Button variant="ghost" className="gap-2">
-            عرض الكل
+            View All
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
@@ -46,7 +46,7 @@ export function RecentReports({ reports }: RecentReportsProps) {
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
                 <div className="absolute top-3 right-3">
                   <Badge variant={report.type === 'lost' ? 'destructive' : 'success'}>
-                    {report.type === 'lost' ? 'مفقود' : 'موجود'}
+                    {report.type === 'lost' ? 'Lost' : 'Found'}
                   </Badge>
                 </div>
                 <div className="absolute bottom-3 right-3 left-3">
@@ -85,7 +85,7 @@ export function RecentReports({ reports }: RecentReportsProps) {
                   </div>
                   <div className="flex items-center gap-1">
                     <Calendar className="h-3 w-3" />
-                    {new Date(report.date).toLocaleDateString('ar-SA')}
+                    {new Date(report.date).toLocaleDateString('en-US')}
                   </div>
                 </div>
               </div>

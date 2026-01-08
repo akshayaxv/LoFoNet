@@ -31,36 +31,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [isInitialized, setIsInitialized] = useState(false);
 
     useEffect(() => {
-        // قراءة المستخدم من localStorage فوراً (قبل أي async)
         const cachedUser = getCurrentUser();
         if (cachedUser) {
             setUser(cachedUser);
         }
 
-        // ثم تهيئة التطبيق
         initializeApp();
     }, []);
 
     const initializeApp = async () => {
         try {
-            // تهيئة قاعدة البيانات (في الخلفية)
             initializeDatabase().catch(err =>
                 console.error('خطأ في تهيئة قاعدة البيانات:', err)
             );
 
-            // التحقق من الجلسة الحالية
             const cachedUser = getCurrentUser();
             if (cachedUser) {
-                // المستخدم موجود في الـ cache، نتحقق من الجلسة في الخلفية
+
                 setIsLoading(false);
                 setIsInitialized(true);
 
-                // التحقق من صلاحية الجلسة بدون blocking
                 validateSession().then(result => {
                     if (result.success && result.user) {
                         setUser(result.user);
                     } else {
-                        // الجلسة منتهية
+                    
                         setUser(null);
                         localStorage.removeItem('murshid_user');
                         localStorage.removeItem('murshid_token');
@@ -69,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     console.error('خطأ في التحقق من الجلسة:', err);
                 });
             } else {
-                // لا يوجد مستخدم في الـ cache
+                
                 setIsLoading(false);
                 setIsInitialized(true);
             }

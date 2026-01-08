@@ -16,27 +16,43 @@ interface LocationPickerProps {
     initialLng?: number;
 }
 
-// إحداثيات المدن اليمنية
-const YEMEN_CITIES: Record<string, { lat: number; lng: number }> = {
-    'صنعاء': { lat: 15.3694, lng: 44.1910 },
-    'عدن': { lat: 12.7855, lng: 45.0187 },
-    'تعز': { lat: 13.5789, lng: 44.0219 },
-    'الحديدة': { lat: 14.7979, lng: 42.9540 },
-    'إب': { lat: 13.9759, lng: 44.1709 },
-    'المكلا': { lat: 14.5422, lng: 49.1255 },
-    'ذمار': { lat: 14.5425, lng: 44.4019 },
-    'عمران': { lat: 15.6594, lng: 43.9439 },
-    'صعدة': { lat: 16.9400, lng: 43.7600 },
-    'حجة': { lat: 15.6914, lng: 43.6031 },
-    'البيضاء': { lat: 13.9870, lng: 45.5700 },
-    'لحج': { lat: 13.0570, lng: 44.8871 },
-    'مأرب': { lat: 15.4681, lng: 45.3220 },
-    'شبوة': { lat: 14.7722, lng: 47.0122 },
+// Indian cities coordinates
+const INDIAN_CITIES: Record<string, { lat: number; lng: number }> = {
+    'Mumbai': { lat: 19.0760, lng: 72.8777 },
+    'Delhi': { lat: 28.7041, lng: 77.1025 },
+    'Bangalore': { lat: 12.9716, lng: 77.5946 },
+    'Hyderabad': { lat: 17.3850, lng: 78.4867 },
+    'Chennai': { lat: 13.0827, lng: 80.2707 },
+    'Kolkata': { lat: 22.5726, lng: 88.3639 },
+    'Pune': { lat: 18.5204, lng: 73.8567 },
+    'Ahmedabad': { lat: 23.0225, lng: 72.5714 },
+    'Jaipur': { lat: 26.9124, lng: 75.7873 },
+    'Surat': { lat: 21.1702, lng: 72.8311 },
+    'Lucknow': { lat: 26.8467, lng: 80.9462 },
+    'Kanpur': { lat: 26.4499, lng: 80.3319 },
+    'Nagpur': { lat: 21.1458, lng: 79.0882 },
+    'Indore': { lat: 22.7196, lng: 75.8577 },
+    'Thane': { lat: 19.2183, lng: 72.9781 },
+    'Bhopal': { lat: 23.2599, lng: 77.4126 },
+    'Visakhapatnam': { lat: 17.6868, lng: 83.2185 },
+    'Patna': { lat: 25.5941, lng: 85.1376 },
+    'Vadodara': { lat: 22.3072, lng: 73.1812 },
+    'Ghaziabad': { lat: 28.6692, lng: 77.4538 },
+    'Ludhiana': { lat: 30.9010, lng: 75.8573 },
+    'Agra': { lat: 27.1767, lng: 78.0081 },
+    'Nashik': { lat: 19.9975, lng: 73.7898 },
+    'Faridabad': { lat: 28.4089, lng: 77.3178 },
+    'Meerut': { lat: 28.9845, lng: 77.7064 },
+    'Rajkot': { lat: 22.3039, lng: 70.8022 },
+    'Varanasi': { lat: 25.3176, lng: 82.9739 },
+    'Srinagar': { lat: 34.0837, lng: 74.7973 },
+    'Amritsar': { lat: 31.6340, lng: 74.8723 },
+    'Coimbatore': { lat: 11.0168, lng: 76.9558 },
 };
 
 export function LocationPicker({ onLocationSelect, initialLat, initialLng }: LocationPickerProps) {
-    const [lat, setLat] = useState<number>(initialLat || 15.3694);
-    const [lng, setLng] = useState<number>(initialLng || 44.1910);
+    const [lat, setLat] = useState<number>(initialLat || 28.7041);
+    const [lng, setLng] = useState<number>(initialLng || 77.1025);
     const [zoom, setZoom] = useState(15);
     const [isLoading, setIsLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -44,15 +60,15 @@ export function LocationPicker({ onLocationSelect, initialLat, initialLng }: Loc
     const [isConfirmed, setIsConfirmed] = useState(false);
     const mapRef = useRef<HTMLIFrameElement>(null);
 
-    // فلترة المدن
-    const filteredCities = Object.keys(YEMEN_CITIES).filter(city =>
-        city.includes(searchQuery)
+    // Filter cities
+    const filteredCities = Object.keys(INDIAN_CITIES).filter(city =>
+        city.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    // الحصول على الموقع الحالي بـ GPS
+    // Get current GPS location
     const getCurrentLocation = useCallback(() => {
         if (!navigator.geolocation) {
-            toast.error('المتصفح لا يدعم تحديد الموقع');
+            toast.error('Browser does not support location services');
             return;
         }
 
@@ -65,13 +81,13 @@ export function LocationPicker({ onLocationSelect, initialLat, initialLng }: Loc
                 setLng(newLng);
                 setZoom(17);
                 setIsConfirmed(false);
-                toast.success('تم تحديد موقعك الحالي');
+                toast.success('Current location detected');
                 setIsLoading(false);
             },
             (error) => {
-                let errorMsg = 'فشل في تحديد الموقع';
-                if (error.code === 1) errorMsg = 'يرجى السماح بالوصول للموقع';
-                else if (error.code === 2) errorMsg = 'الموقع غير متاح';
+                let errorMsg = 'Failed to detect location';
+                if (error.code === 1) errorMsg = 'Please allow location access';
+                else if (error.code === 2) errorMsg = 'Location unavailable';
                 toast.error(errorMsg);
                 setIsLoading(false);
             },
@@ -79,9 +95,9 @@ export function LocationPicker({ onLocationSelect, initialLat, initialLng }: Loc
         );
     }, []);
 
-    // اختيار مدينة
+    // Select city
     const selectCity = (cityName: string) => {
-        const city = YEMEN_CITIES[cityName];
+        const city = INDIAN_CITIES[cityName];
         if (city) {
             setLat(city.lat);
             setLng(city.lng);
@@ -92,20 +108,20 @@ export function LocationPicker({ onLocationSelect, initialLat, initialLng }: Loc
         }
     };
 
-    // تأكيد الموقع
+    // Confirm location
     const confirmLocation = () => {
         onLocationSelect({ lat, lng, address: searchQuery || undefined });
         setIsConfirmed(true);
-        toast.success('تم تأكيد الموقع');
+        toast.success('Location confirmed');
     };
 
-    // تقريب/إبعاد الخريطة
+    // Zoom in/out map
     const zoomIn = () => setZoom(prev => Math.min(prev + 1, 19));
     const zoomOut = () => setZoom(prev => Math.max(prev - 1, 5));
 
-    // تحريك الموقع بالأسهم
+    // Move location with arrows
     const moveLocation = (direction: 'up' | 'down' | 'left' | 'right') => {
-        const step = 0.001 / (zoom / 15); // خطوة أصغر مع تكبير أكثر
+        const step = 0.001 / (zoom / 15); // Smaller step with more zoom
         setIsConfirmed(false);
         switch (direction) {
             case 'up': setLat(prev => prev + step); break;
@@ -115,19 +131,19 @@ export function LocationPicker({ onLocationSelect, initialLat, initialLng }: Loc
         }
     };
 
-    // رابط الخريطة
+    // Map URL
     const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.01},${lat - 0.008},${lng + 0.01},${lat + 0.008}&layer=mapnik&marker=${lat},${lng}`;
 
     return (
         <Card className="overflow-hidden border-2 border-primary/20">
             <CardContent className="p-0">
-                {/* البحث */}
+                {/* Search */}
                 <div className="p-3 border-b bg-muted/30">
                     <div className="flex gap-2">
                         <div className="flex-1 relative">
-                            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input
-                                placeholder="ابحث عن مدينة..."
+                                placeholder="Search for a city..."
                                 value={searchQuery}
                                 onChange={(e) => {
                                     setSearchQuery(e.target.value);
@@ -135,16 +151,16 @@ export function LocationPicker({ onLocationSelect, initialLat, initialLng }: Loc
                                 }}
                                 onFocus={() => setShowSuggestions(true)}
                                 onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                                className="pr-10"
+                                className="pl-10"
                             />
 
                             {showSuggestions && filteredCities.length > 0 && (
-                                <div className="absolute top-full right-0 left-0 z-50 mt-1 bg-background border rounded-lg shadow-lg max-h-40 overflow-auto">
+                                <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-background border rounded-lg shadow-lg max-h-40 overflow-auto">
                                     {filteredCities.map(city => (
                                         <button
                                             key={city}
                                             onClick={() => selectCity(city)}
-                                            className="w-full px-3 py-2 text-right text-sm hover:bg-primary/10 flex items-center gap-2"
+                                            className="w-full px-3 py-2 text-left text-sm hover:bg-primary/10 flex items-center gap-2"
                                         >
                                             <MapPin className="h-4 w-4 text-primary" />
                                             {city}
@@ -159,7 +175,7 @@ export function LocationPicker({ onLocationSelect, initialLat, initialLng }: Loc
                             size="icon"
                             onClick={getCurrentLocation}
                             disabled={isLoading}
-                            title="موقعي الحالي"
+                            title="My current location"
                         >
                             {isLoading ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -170,17 +186,17 @@ export function LocationPicker({ onLocationSelect, initialLat, initialLng }: Loc
                     </div>
                 </div>
 
-                {/* الخريطة */}
+                {/* Map */}
                 <div className="relative h-56 bg-muted">
                     <iframe
                         ref={mapRef}
-                        title="خريطة"
+                        title="Map"
                         src={mapUrl}
                         className="w-full h-full border-0"
                         loading="lazy"
                     />
 
-                    {/* الدبوس في المنتصف */}
+                    {/* Pin in center */}
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <div className="relative">
                             <Target className={`h-8 w-8 ${isConfirmed ? 'text-success' : 'text-destructive'}`} />
@@ -188,7 +204,7 @@ export function LocationPicker({ onLocationSelect, initialLat, initialLng }: Loc
                     </div>
                 </div>
 
-                {/* الإحداثيات والتأكيد */}
+                {/* Coordinates and confirmation */}
                 <div className="p-3 border-t bg-muted/30">
                     <div className="flex items-center justify-between mb-2">
                         <span className="text-xs text-muted-foreground">
@@ -197,7 +213,7 @@ export function LocationPicker({ onLocationSelect, initialLat, initialLng }: Loc
                         {isConfirmed && (
                             <Badge variant="success" className="gap-1 text-xs">
                                 <Check className="h-3 w-3" />
-                                تم التأكيد
+                                Confirmed
                             </Badge>
                         )}
                     </div>
@@ -210,12 +226,12 @@ export function LocationPicker({ onLocationSelect, initialLat, initialLng }: Loc
                         {isConfirmed ? (
                             <>
                                 <Check className="h-4 w-4" />
-                                تم تأكيد الموقع
+                                Location Confirmed
                             </>
                         ) : (
                             <>
                                 <MapPin className="h-4 w-4" />
-                                تأكيد الموقع
+                                Confirm Location
                             </>
                         )}
                     </Button>

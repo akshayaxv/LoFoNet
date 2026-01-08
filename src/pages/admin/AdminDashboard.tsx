@@ -44,7 +44,7 @@ export default function AdminDashboard() {
             setStats(statsData);
             setRecentReports(reportsData);
         } catch (error) {
-            console.error('خطأ في تحميل البيانات:', error);
+            console.error('Error loading data:', error);
         } finally {
             setIsLoading(false);
         }
@@ -52,11 +52,11 @@ export default function AdminDashboard() {
 
     const getStatusBadge = (status: string) => {
         const variants: Record<string, { variant: 'default' | 'destructive' | 'success' | 'warning' | 'secondary', label: string }> = {
-            pending: { variant: 'warning', label: 'قيد الانتظار' },
-            processing: { variant: 'secondary', label: 'جاري الفحص' },
-            matched: { variant: 'success', label: 'تم التطابق' },
-            contacted: { variant: 'default', label: 'تم التواصل' },
-            closed: { variant: 'destructive', label: 'مغلق' },
+            pending: { variant: 'warning', label: 'Pending' },
+            processing: { variant: 'secondary', label: 'Processing' },
+            matched: { variant: 'success', label: 'Matched' },
+            contacted: { variant: 'default', label: 'Contacted' },
+            closed: { variant: 'destructive', label: 'Closed' },
         };
         const { variant, label } = variants[status] || { variant: 'default', label: status };
         return <Badge variant={variant}>{label}</Badge>;
@@ -68,7 +68,7 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-center h-[60vh]">
                     <div className="text-center space-y-4">
                         <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
-                        <p className="text-muted-foreground">جاري تحميل البيانات...</p>
+                        <p className="text-muted-foreground">Loading data...</p>
                     </div>
                 </div>
             </AdminLayout>
@@ -79,8 +79,8 @@ export default function AdminDashboard() {
         <AdminLayout>
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-foreground">لوحة التحكم</h1>
-                <p className="text-muted-foreground mt-1">مرحباً بك في نظام إدارة مُرشد</p>
+                <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+                <p className="text-muted-foreground mt-1">Welcome to Murshid Management System</p>
             </div>
 
             {/* Stats Grid */}
@@ -89,9 +89,9 @@ export default function AdminDashboard() {
                     <CardContent className="p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-muted-foreground">بلاغات المفقودات</p>
+                                <p className="text-sm font-medium text-muted-foreground">Lost Reports</p>
                                 <p className="text-3xl font-bold text-foreground mt-1">
-                                    {stats?.totalLostReports.toLocaleString('ar-SA') || 0}
+                                    {stats?.totalLostReports.toLocaleString('en-US') || 0}
                                 </p>
                             </div>
                             <div className="h-14 w-14 rounded-2xl bg-red-500/20 flex items-center justify-center">
@@ -105,9 +105,9 @@ export default function AdminDashboard() {
                     <CardContent className="p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-muted-foreground">بلاغات الموجودات</p>
+                                <p className="text-sm font-medium text-muted-foreground">Found Reports</p>
                                 <p className="text-3xl font-bold text-foreground mt-1">
-                                    {stats?.totalFoundReports.toLocaleString('ar-SA') || 0}
+                                    {stats?.totalFoundReports.toLocaleString('en-US') || 0}
                                 </p>
                             </div>
                             <div className="h-14 w-14 rounded-2xl bg-green-500/20 flex items-center justify-center">
@@ -121,9 +121,9 @@ export default function AdminDashboard() {
                     <CardContent className="p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-muted-foreground">تطابقات ناجحة</p>
+                                <p className="text-sm font-medium text-muted-foreground">Successful Matches</p>
                                 <p className="text-3xl font-bold text-foreground mt-1">
-                                    {stats?.successfulMatches.toLocaleString('ar-SA') || 0}
+                                    {stats?.successfulMatches.toLocaleString('en-US') || 0}
                                 </p>
                             </div>
                             <div className="h-14 w-14 rounded-2xl bg-blue-500/20 flex items-center justify-center">
@@ -137,9 +137,9 @@ export default function AdminDashboard() {
                     <CardContent className="p-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-muted-foreground">المستخدمين</p>
+                                <p className="text-sm font-medium text-muted-foreground">Users</p>
                                 <p className="text-3xl font-bold text-foreground mt-1">
-                                    {stats?.totalUsers.toLocaleString('ar-SA') || 0}
+                                    {stats?.totalUsers.toLocaleString('en-US') || 0}
                                 </p>
                             </div>
                             <div className="h-14 w-14 rounded-2xl bg-purple-500/20 flex items-center justify-center">
@@ -155,10 +155,10 @@ export default function AdminDashboard() {
                 <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-medium text-muted-foreground">نسبة التطابق الناجح</p>
+                            <p className="text-sm font-medium text-muted-foreground">Successful Match Rate</p>
                             <p className="text-4xl font-bold text-primary mt-2">{stats?.matchRate || 0}%</p>
                             <p className="text-sm text-muted-foreground mt-1">
-                                من إجمالي البلاغات المسجلة
+                                Of total registered reports
                             </p>
                         </div>
                         <div className="h-20 w-20 rounded-full gradient-primary flex items-center justify-center">
@@ -173,11 +173,11 @@ export default function AdminDashboard() {
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle className="flex items-center gap-2">
                         <Clock className="h-5 w-5 text-primary" />
-                        أحدث البلاغات
+                        Recent Reports
                     </CardTitle>
                     <Link to="/admin/reports">
                         <Button variant="ghost" size="sm" className="gap-2">
-                            عرض الكل
+                            View All
                             <ArrowLeft className="h-4 w-4" />
                         </Button>
                     </Link>
@@ -186,7 +186,7 @@ export default function AdminDashboard() {
                     {recentReports.length === 0 ? (
                         <div className="text-center py-10 text-muted-foreground">
                             <AlertCircle className="h-10 w-10 mx-auto mb-3 opacity-50" />
-                            <p>لا توجد بلاغات حتى الآن</p>
+                            <p>No reports yet</p>
                         </div>
                     ) : (
                         <div className="space-y-4">
@@ -207,7 +207,7 @@ export default function AdminDashboard() {
                                         <div>
                                             <p className="font-medium">{report.title}</p>
                                             <p className="text-sm text-muted-foreground">
-                                                {report.user_name || 'مستخدم'} • {new Date(report.created_at).toLocaleDateString('ar-SA')}
+                                                {report.user_name || 'User'} • {new Date(report.created_at).toLocaleDateString('en-US')}
                                             </p>
                                         </div>
                                     </div>
@@ -215,7 +215,7 @@ export default function AdminDashboard() {
                                         {getStatusBadge(report.status)}
                                         <Link to={`/admin/reports/${report.id}`}>
                                             <Button variant="ghost" size="sm">
-                                                عرض
+                                                View
                                             </Button>
                                         </Link>
                                     </div>

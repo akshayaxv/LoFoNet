@@ -30,7 +30,7 @@ const Index = () => {
       const data = await getSystemStats();
       setStats(data);
     } catch (error) {
-      console.error('خطأ في تحميل الإحصائيات:', error);
+      console.error('Error loading statistics:', error);
     }
   };
 
@@ -41,28 +41,28 @@ const Index = () => {
       {/* Stats Section */}
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-10">
         <StatsCard
-          title="بلاغات المفقودات"
-          value={stats.totalLostReports.toLocaleString('ar-SA')}
+          title="Lost Reports"
+          value={stats.totalLostReports.toLocaleString('en-US')}
           icon={FileSearch}
           trend={{ value: 12, isPositive: true }}
           iconClassName="gradient-primary"
         />
         <StatsCard
-          title="بلاغات الموجودات"
-          value={stats.totalFoundReports.toLocaleString('ar-SA')}
+          title="Found Reports"
+          value={stats.totalFoundReports.toLocaleString('en-US')}
           icon={MapPin}
           trend={{ value: 8, isPositive: true }}
           iconClassName="gradient-secondary"
         />
         <StatsCard
-          title="تطابقات ناجحة"
-          value={stats.successfulMatches.toLocaleString('ar-SA')}
+          title="Successful Matches"
+          value={stats.successfulMatches.toLocaleString('en-US')}
           icon={CheckCircle}
           trend={{ value: 15, isPositive: true }}
           iconClassName="bg-success"
         />
         <StatsCard
-          title="نسبة التطابق"
+          title="Match Rate"
           value={`${stats.matchRate}%`}
           icon={TrendingUp}
           trend={{ value: 3, isPositive: true }}
@@ -76,4 +76,3 @@ const Index = () => {
 };
 
 export default Index;
-

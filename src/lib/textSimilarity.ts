@@ -1,65 +1,53 @@
 /**
- * خوارزمية تشابه النصوص المتقدمة
- * تستخدم TF-IDF + Jaccard Similarity + Arabic Stemming
+ * Advanced Text Similarity Algorithm
+ * Uses TF-IDF + Jaccard Similarity + Text Stemming
  */
 
-// ==================== Arabic Text Processing ====================
+// ==================== English Text Processing ====================
 
-// كلمات التوقف العربية الشائعة
-const ARABIC_STOP_WORDS = new Set([
-    'في', 'من', 'على', 'إلى', 'عن', 'مع', 'هذا', 'هذه', 'ذلك', 'تلك',
-    'الذي', 'التي', 'الذين', 'اللواتي', 'ما', 'ماذا', 'كيف', 'متى', 'أين',
-    'لماذا', 'أن', 'إن', 'كان', 'كانت', 'يكون', 'تكون', 'هو', 'هي', 'هم',
-    'نحن', 'أنا', 'أنت', 'أنتم', 'و', 'أو', 'ثم', 'لكن', 'بل', 'حتى',
-    'قد', 'لقد', 'سوف', 'لن', 'لم', 'لا', 'نعم', 'كل', 'بعض', 'كلا',
-    'بين', 'فوق', 'تحت', 'أمام', 'خلف', 'داخل', 'خارج', 'عند', 'منذ',
-    'الى', 'اذا', 'لو', 'او', 'ان', 'كانوا', 'يكونوا', 'هناك', 'هنا',
+// Common English stop words
+const ENGLISH_STOP_WORDS = new Set([
+    'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
+    'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'were', 'been',
+    'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would',
+    'could', 'should', 'may', 'might', 'can', 'this', 'that', 'these',
+    'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'what', 'which',
+    'who', 'when', 'where', 'why', 'how', 'all', 'each', 'every', 'both',
+    'few', 'more', 'most', 'other', 'some', 'such', 'no', 'not', 'only',
+    'own', 'same', 'so', 'than', 'too', 'very', 'just', 'about', 'into',
+    'through', 'during', 'before', 'after', 'above', 'below', 'between',
+    'under', 'again', 'further', 'then', 'once',
 ]);
 
-// اللواحق والسوابق العربية
-const ARABIC_PREFIXES = ['ال', 'و', 'ب', 'ك', 'ل', 'ف'];
-const ARABIC_SUFFIXES = ['ة', 'ات', 'ين', 'ون', 'ان', 'ها', 'هم', 'هن', 'ي', 'ك', 'نا'];
+// Common English suffixes for basic stemming
+const ENGLISH_SUFFIXES = ['ing', 'ed', 'es', 's', 'ly', 'er', 'est', 'tion', 'ness', 'ment'];
 
 /**
- * تنظيف النص العربي
+ * Clean English text
  */
-function cleanArabicText(text: string): string {
+function cleanText(text: string): string {
     return text
-        // إزالة التشكيل
-        .replace(/[\u064B-\u065F]/g, '')
-        // تطبيع الألف
-        .replace(/[أإآا]/g, 'ا')
-        // تطبيع التاء المربوطة
-        .replace(/ة/g, 'ه')
-        // تطبيع الياء
-        .replace(/ى/g, 'ي')
-        // إزالة الأرقام والرموز
-        .replace(/[0-9٠-٩]/g, '')
-        // إزالة علامات الترقيم
-        .replace(/[.,،؛:؟!]/g, '')
-        // تحويل للحروف الصغيرة (للنص الإنجليزي)
+        // Remove numbers
+        .replace(/[0-9]/g, '')
+        // Remove punctuation
+        .replace(/[.,;:?!'"()-]/g, ' ')
+        // Convert to lowercase
         .toLowerCase()
+        // Remove extra whitespace
+        .replace(/\s+/g, ' ')
         .trim();
 }
 
 /**
- * تجذير الكلمة العربية (Light Stemming)
+ * Basic English word stemming (Light Stemming)
  */
-function stemArabicWord(word: string): string {
-    if (word.length < 3) return word;
+function stemWord(word: string): string {
+    if (word.length < 4) return word;
 
     let stemmed = word;
 
-    // إزالة السوابق
-    for (const prefix of ARABIC_PREFIXES) {
-        if (stemmed.startsWith(prefix) && stemmed.length > prefix.length + 2) {
-            stemmed = stemmed.slice(prefix.length);
-            break;
-        }
-    }
-
-    // إزالة اللواحق
-    for (const suffix of ARABIC_SUFFIXES) {
+    // Remove common suffixes
+    for (const suffix of ENGLISH_SUFFIXES) {
         if (stemmed.endsWith(suffix) && stemmed.length > suffix.length + 2) {
             stemmed = stemmed.slice(0, -suffix.length);
             break;
@@ -70,22 +58,22 @@ function stemArabicWord(word: string): string {
 }
 
 /**
- * تقسيم النص إلى كلمات مُعالجة
+ * Tokenize text into processed words
  */
 function tokenize(text: string): string[] {
-    const cleaned = cleanArabicText(text);
+    const cleaned = cleanText(text);
     const words = cleaned.split(/\s+/).filter(w => w.length > 1);
 
     return words
-        .filter(word => !ARABIC_STOP_WORDS.has(word))
-        .map(word => stemArabicWord(word))
+        .filter(word => !ENGLISH_STOP_WORDS.has(word))
+        .map(word => stemWord(word))
         .filter(word => word.length > 1);
 }
 
 // ==================== TF-IDF Implementation ====================
 
 /**
- * حساب تردد الكلمة (Term Frequency)
+ * Calculate Term Frequency
  */
 function calculateTF(tokens: string[]): Map<string, number> {
     const tf = new Map<string, number>();
@@ -95,7 +83,7 @@ function calculateTF(tokens: string[]): Map<string, number> {
         tf.set(token, (tf.get(token) || 0) + 1);
     }
 
-    // تطبيع القيم
+    // Normalize values
     for (const [token, count] of tf) {
         tf.set(token, count / total);
     }
@@ -104,20 +92,20 @@ function calculateTF(tokens: string[]): Map<string, number> {
 }
 
 /**
- * حساب TF-IDF Vector
+ * Calculate TF-IDF Vector
  */
 function calculateTFIDF(tokens1: string[], tokens2: string[]): { vec1: Map<string, number>; vec2: Map<string, number> } {
     const tf1 = calculateTF(tokens1);
     const tf2 = calculateTF(tokens2);
 
-    // جمع جميع الكلمات
+    // Collect all tokens
     const allTokens = new Set([...tokens1, ...tokens2]);
 
     const vec1 = new Map<string, number>();
     const vec2 = new Map<string, number>();
 
     for (const token of allTokens) {
-        // IDF بسيط (في وثيقتين)
+        // Simple IDF (in two documents)
         const df = (tokens1.includes(token) ? 1 : 0) + (tokens2.includes(token) ? 1 : 0);
         const idf = Math.log(2 / df) + 1;
 
@@ -129,7 +117,7 @@ function calculateTFIDF(tokens1: string[], tokens2: string[]): { vec1: Map<strin
 }
 
 /**
- * حساب Cosine Similarity
+ * Calculate Cosine Similarity
  */
 function cosineSimilarity(vec1: Map<string, number>, vec2: Map<string, number>): number {
     let dotProduct = 0;
@@ -155,7 +143,7 @@ function cosineSimilarity(vec1: Map<string, number>, vec2: Map<string, number>):
 // ==================== Jaccard Similarity ====================
 
 /**
- * حساب Jaccard Similarity
+ * Calculate Jaccard Similarity
  */
 function jaccardSimilarity(tokens1: string[], tokens2: string[]): number {
     const set1 = new Set(tokens1);
@@ -172,11 +160,11 @@ function jaccardSimilarity(tokens1: string[], tokens2: string[]): number {
 // ==================== N-gram Similarity ====================
 
 /**
- * إنشاء N-grams
+ * Create N-grams
  */
 function createNGrams(text: string, n: number): Set<string> {
     const ngrams = new Set<string>();
-    const cleaned = cleanArabicText(text);
+    const cleaned = cleanText(text);
 
     for (let i = 0; i <= cleaned.length - n; i++) {
         ngrams.add(cleaned.slice(i, i + n));
@@ -186,7 +174,7 @@ function createNGrams(text: string, n: number): Set<string> {
 }
 
 /**
- * حساب تشابه N-gram
+ * Calculate N-gram similarity
  */
 function ngramSimilarity(text1: string, text2: string, n = 2): number {
     const ngrams1 = createNGrams(text1, n);
@@ -211,17 +199,17 @@ export interface TextSimilarityResult {
 }
 
 /**
- * حساب التشابه النصي الشامل
- * يجمع بين TF-IDF, Jaccard, و N-gram
+ * Calculate comprehensive text similarity
+ * Combines TF-IDF, Jaccard, and N-gram
  */
 export function calculateTextSimilarity(text1: string, text2: string): TextSimilarityResult {
-    // التحقق من القيم الفارغة
+    // Check for empty values
     if (!text1 || !text2) {
         return { overall: 0, tfidf: 0, jaccard: 0, ngram: 0, exactMatch: false };
     }
 
-    // التحقق من التطابق التام
-    if (cleanArabicText(text1) === cleanArabicText(text2)) {
+    // Check for exact match
+    if (cleanText(text1) === cleanText(text2)) {
         return { overall: 1, tfidf: 1, jaccard: 1, ngram: 1, exactMatch: true };
     }
 
@@ -239,7 +227,7 @@ export function calculateTextSimilarity(text1: string, text2: string): TextSimil
     // N-gram Similarity (bigrams)
     const ngram = ngramSimilarity(text1, text2, 2);
 
-    // الدرجة الإجمالية (Weighted Average)
+    // Overall score (Weighted Average)
     const overall = tfidf * 0.5 + jaccard * 0.3 + ngram * 0.2;
 
     return {
@@ -252,31 +240,31 @@ export function calculateTextSimilarity(text1: string, text2: string): TextSimil
 }
 
 /**
- * مقارنة سمات متعددة
+ * Compare multiple attributes
  */
 export function compareAttributes(
     item1: { title: string; description: string; color?: string; marks?: string; category: string },
     item2: { title: string; description: string; color?: string; marks?: string; category: string }
 ): number {
-    // تشابه العنوان (وزن 30%)
+    // Title similarity (weight 30%)
     const titleSim = calculateTextSimilarity(item1.title, item2.title).overall;
 
-    // تشابه الوصف (وزن 40%)
+    // Description similarity (weight 40%)
     const descSim = calculateTextSimilarity(item1.description, item2.description).overall;
 
-    // تشابه اللون (وزن 15%)
+    // Color similarity (weight 15%)
     let colorSim = 0;
     if (item1.color && item2.color) {
         colorSim = calculateTextSimilarity(item1.color, item2.color).overall;
     }
 
-    // تشابه العلامات المميزة (وزن 10%)
+    // Distinguishing marks similarity (weight 10%)
     let marksSim = 0;
     if (item1.marks && item2.marks) {
         marksSim = calculateTextSimilarity(item1.marks, item2.marks).overall;
     }
 
-    // تطابق الفئة (وزن 5%)
+    // Category match (weight 5%)
     const categorySim = item1.category === item2.category ? 1 : 0;
 
     const total =

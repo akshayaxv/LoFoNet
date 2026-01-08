@@ -28,9 +28,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const navLinks = [
-  { href: '/', label: 'الرئيسية', icon: LayoutDashboard },
-  { href: '/reports', label: 'البلاغات', icon: FileSearch },
-  { href: '/new-report', label: 'بلاغ جديد', icon: Plus },
+  { href: '/', label: 'Home', icon: LayoutDashboard },
+  { href: '/reports', label: 'Reports', icon: FileSearch },
+  { href: '/new-report', label: 'New Report', icon: Plus },
 ];
 
 export function Header() {
@@ -38,11 +38,11 @@ export function Header() {
   const [unreadCount, setUnreadCount] = useState(0);
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
 
-  // جلب عدد الإشعارات غير المقروءة
+  // Fetch unread notifications count
   useEffect(() => {
     if (user?.id) {
       loadUnreadCount();
-      // تحديث كل 30 ثانية
+      // Update every 30 seconds
       const interval = setInterval(loadUnreadCount, 30000);
       return () => clearInterval(interval);
     }
@@ -69,8 +69,8 @@ export function Header() {
             <Search className="h-5 w-5 text-primary-foreground" />
           </div>
           <div className="block">
-            <h1 className="text-lg font-bold text-foreground">مُرشد</h1>
-            <p className="text-xs text-muted-foreground hidden sm:block">نظام المفقودات الذكي</p>
+            <h1 className="text-lg font-bold text-foreground">Murshid</h1>
+            <p className="text-xs text-muted-foreground hidden sm:block">Smart Lost & Found System</p>
           </div>
         </Link>
 
@@ -108,7 +108,7 @@ export function Header() {
               )}
             >
               <Shield className="h-4 w-4" />
-              لوحة التحكم
+              Dashboard
             </Link>
           )}
         </nav>
@@ -150,26 +150,26 @@ export function Header() {
                   <DropdownMenuItem asChild>
                     <Link to="/admin" className="cursor-pointer">
                       <Shield className="h-4 w-4 ml-2" />
-                      لوحة التحكم
+                      Dashboard
                     </Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem asChild>
                   <Link to="/profile" className="cursor-pointer">
                     <User className="h-4 w-4 ml-2" />
-                    الملف الشخصي
+                    Profile
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/reports" className="cursor-pointer">
                     <FileSearch className="h-4 w-4 ml-2" />
-                    بلاغاتي
+                    My Reports
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/notifications" className="cursor-pointer">
                     <Bell className="h-4 w-4 ml-2" />
-                    الإشعارات
+                    Notifications
                     {unreadCount > 0 && (
                       <Badge variant="destructive" className="mr-auto text-xs">
                         {unreadCount}
@@ -180,7 +180,7 @@ export function Header() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
                   <LogOut className="h-4 w-4 ml-2" />
-                  تسجيل الخروج
+                  Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -188,7 +188,7 @@ export function Header() {
             <Link to="/login" className="hidden md:block">
               <Button variant="outline" size="default">
                 <LogIn className="h-4 w-4" />
-                تسجيل الدخول
+                Login
               </Button>
             </Link>
           )}
@@ -196,7 +196,7 @@ export function Header() {
           <Link to="/new-report" className="hidden md:block">
             <Button variant="hero" size="default">
               <Plus className="h-4 w-4" />
-              بلاغ جديد
+              New Report
             </Button>
           </Link>
 
@@ -250,7 +250,7 @@ export function Header() {
                 className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted"
               >
                 <Bell className="h-5 w-5" />
-                الإشعارات
+                Notifications
                 {unreadCount > 0 && (
                   <Badge variant="destructive" className="mr-auto">
                     {unreadCount}
@@ -266,7 +266,7 @@ export function Header() {
                 className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10"
               >
                 <Shield className="h-5 w-5" />
-                لوحة التحكم
+                Dashboard
               </Link>
             )}
 
@@ -288,14 +288,14 @@ export function Header() {
                     onClick={handleLogout}
                   >
                     <LogOut className="h-5 w-5" />
-                    تسجيل الخروج
+                    Logout
                   </Button>
                 </>
               ) : (
                 <Link to="/login" onClick={() => setIsMenuOpen(false)}>
                   <Button variant="ghost" className="w-full justify-start gap-3">
                     <LogIn className="h-5 w-5" />
-                    تسجيل الدخول
+                    Login
                   </Button>
                 </Link>
               )}

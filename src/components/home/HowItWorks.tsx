@@ -4,26 +4,26 @@ import { FileText, Brain, Bell, CheckCircle } from 'lucide-react';
 const steps = [
   {
     icon: FileText,
-    title: 'تقديم البلاغ',
-    description: 'أضف تفاصيل العنصر المفقود أو الذي وجدته مع صور ووصف دقيق',
+    title: 'Submit Report',
+    description: 'Add details of the lost or found item with photos and accurate description',
     color: 'bg-primary/10 text-primary',
   },
   {
     icon: Brain,
-    title: 'تحليل الذكاء الاصطناعي',
-    description: 'يحلل النظام الصور والنصوص والموقع لإيجاد التطابقات المحتملة',
+    title: 'AI Analysis',
+    description: 'The system analyzes images, text, and location to find potential matches',
     color: 'bg-secondary/10 text-secondary',
   },
   {
     icon: Bell,
-    title: 'إشعار فوري',
-    description: 'نرسل إشعاراً عند العثور على تطابق محتمل مع بلاغك',
+    title: 'Instant Notification',
+    description: 'We send a notification when a potential match is found for your report',
     color: 'bg-success/10 text-success',
   },
   {
     icon: CheckCircle,
-    title: 'استعادة الممتلكات',
-    description: 'نسهل التواصل بين الطرفين لاستعادة المفقودات بأمان',
+    title: 'Recover Property',
+    description: 'We facilitate communication between parties to safely recover lost items',
     color: 'bg-warning/10 text-warning',
   },
 ];
@@ -32,8 +32,8 @@ export function HowItWorks() {
   return (
     <section className="mb-10">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-foreground">كيف يعمل النظام؟</h2>
-        <p className="text-muted-foreground mt-2">خطوات بسيطة للعثور على مفقوداتك</p>
+        <h2 className="text-2xl font-bold text-foreground">How Does It Work?</h2>
+        <p className="text-muted-foreground mt-2">Simple steps to find your lost items</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">

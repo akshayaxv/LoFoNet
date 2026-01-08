@@ -7,16 +7,16 @@ export default function AdminMatches() {
     return (
         <Layout>
             <div className="container py-10">
-                <h1 className="text-3xl font-bold mb-8">إدارة التطابقات</h1>
+                <h1 className="text-3xl font-bold mb-8">Manage Matches</h1>
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <GitCompare className="h-6 w-6" />
-                            التطابقات
+                            Matches
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground">جاري العمل على هذه الصفحة...</p>
+                        <p className="text-muted-foreground">This page is under construction...</p>
                     </CardContent>
                 </Card>
             </div>

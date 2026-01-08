@@ -37,7 +37,7 @@ export function InstallPrompt() {
         if (outcome === 'accepted') {
             setDeferredPrompt(null);
             setShowPrompt(false);
-            toast.success('جاري تثبيت التطبيق...');
+            toast.success('Installing app...');
         }
     };
 
@@ -53,21 +53,21 @@ export function InstallPrompt() {
                                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                                     <Download className="h-4 w-4 text-primary" />
                                 </span>
-                                تثبيت تطبيق مُرشد
+                                Install Murshid App
                             </h3>
                             <p className="text-sm text-muted-foreground mb-3">
-                                قم بتثبيت التطبيق للحصول على تجربة أفضل وإشعارات فورية وسرعة أعلى.
+                                Install the app for a better experience with instant notifications and faster performance.
                             </p>
                             <div className="flex gap-2">
                                 <Button size="sm" onClick={handleInstallClick} className="w-full">
-                                    تثبيت الآن
+                                    Install Now
                                 </Button>
                                 <Button
                                     size="sm"
                                     variant="ghost"
                                     onClick={() => setShowPrompt(false)}
                                 >
-                                    لاحقاً
+                                    Later
                                 </Button>
                             </div>
                         </div>

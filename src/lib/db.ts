@@ -2,15 +2,15 @@ import { neon } from '@neondatabase/serverless';
 
 const DATABASE_URL = import.meta.env.VITE_DATABASE_URL;
 
-// إنشاء اتصال بقاعدة البيانات
+// Create database connection
 export const sql = neon(DATABASE_URL);
 
-// التحقق من وجود الجداول وإنشائها إذا لم تكن موجودة
+// Check for existing tables and create them if they don't exist
 export async function initializeDatabase() {
     try {
-        console.log('🔄 جاري تهيئة قاعدة البيانات...');
+        console.log('🔄 Initializing database...');
 
-        // إنشاء جدول المستخدمين
+        // Create users table
         await sql`
       CREATE TABLE IF NOT EXISTS users (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -25,9 +25,9 @@ export async function initializeDatabase() {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
       )
     `;
-        console.log('✅ جدول users تم إنشاؤه');
+        console.log('✅ Users table created');
 
-        // إنشاء جدول البلاغات
+        // Create reports table
         await sql`
       CREATE TABLE IF NOT EXISTS reports (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -48,9 +48,9 @@ export async function initializeDatabase() {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
       )
     `;
-        console.log('✅ جدول reports تم إنشاؤه');
+        console.log('✅ Reports table created');
 
-        // إنشاء جدول صور البلاغات
+        // Create report images table
         await sql`
       CREATE TABLE IF NOT EXISTS report_images (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -59,9 +59,9 @@ export async function initializeDatabase() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
       )
     `;
-        console.log('✅ جدول report_images تم إنشاؤه');
+        console.log('✅ Report_images table created');
 
-        // إنشاء جدول التطابقات
+        // Create AI matches table
         await sql`
       CREATE TABLE IF NOT EXISTS ai_matches (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -76,9 +76,9 @@ export async function initializeDatabase() {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
       )
     `;
-        console.log('✅ جدول ai_matches تم إنشاؤه');
+        console.log('✅ AI_matches table created');
 
-        // إنشاء جدول الإشعارات
+        // Create notifications table
         await sql`
       CREATE TABLE IF NOT EXISTS notifications (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -90,9 +90,9 @@ export async function initializeDatabase() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
       )
     `;
-        console.log('✅ جدول notifications تم إنشاؤه');
+        console.log('✅ Notifications table created');
 
-        // إنشاء جدول جلسات المستخدمين
+        // Create user sessions table
         await sql`
       CREATE TABLE IF NOT EXISTS user_sessions (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -102,9 +102,9 @@ export async function initializeDatabase() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
       )
     `;
-        console.log('✅ جدول user_sessions تم إنشاؤه');
+        console.log('✅ User_sessions table created');
 
-        // إنشاء حساب Admin افتراضي إذا لم يكن موجوداً
+        // Create default Admin account if it doesn't exist
         const adminExists = await sql`
       SELECT id FROM users WHERE email = 'admin@murshid.com'
     `;
@@ -112,20 +112,20 @@ export async function initializeDatabase() {
         if (adminExists.length === 0) {
             await sql`
         INSERT INTO users (email, password_hash, name, role)
-        VALUES ('admin@murshid.com', 'Admin123!@#', 'مدير النظام', 'admin')
+        VALUES ('admin@murshid.com', 'Admin123!@#', 'System Administrator', 'admin')
       `;
-            console.log('✅ تم إنشاء حساب Admin الافتراضي');
+            console.log('✅ Default Admin account created');
         }
 
-        console.log('✅ تم تهيئة قاعدة البيانات بنجاح');
+        console.log('✅ Database initialized successfully');
         return true;
     } catch (error) {
-        console.error('❌ خطأ في تهيئة قاعدة البيانات:', error);
+        console.error('❌ Error initializing database:', error);
         return false;
     }
 }
 
-// دالة للحصول على إحصائيات النظام
+// Function to get system statistics
 export async function getSystemStats() {
     try {
         const lostCount = await sql`SELECT COUNT(*) as count FROM reports WHERE type = 'lost'`;
@@ -144,7 +144,7 @@ export async function getSystemStats() {
             matchRate: Number(matchRate),
         };
     } catch (error) {
-        console.error('خطأ في جلب الإحصائيات:', error);
+        console.error('Error fetching statistics:', error);
         return {
             totalLostReports: 0,
             totalFoundReports: 0,

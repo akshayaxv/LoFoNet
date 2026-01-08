@@ -9,28 +9,28 @@ export function BottomNavigation() {
 
     const navItems = [
         {
-            label: 'الرئيسية',
+            label: 'Home',
             icon: LayoutDashboard,
             path: '/',
         },
         {
-            label: 'البلاغات',
+            label: 'Reports',
             icon: FileSearch,
             path: '/reports',
         },
         {
-            label: 'إضافة',
+            label: 'Add',
             icon: Plus,
             path: '/new-report',
             isPrimary: true,
         },
         {
-            label: 'الإشعارات',
+            label: 'Notifications',
             icon: Bell,
             path: '/notifications',
         },
         {
-            label: 'حسابي',
+            label: 'My Account',
             icon: User,
             path: isAuthenticated ? (user?.role === 'admin' ? '/admin' : '/profile') : '/login',
         },

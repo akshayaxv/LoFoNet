@@ -46,10 +46,10 @@ const notificationColors: Record<string, string> = {
 };
 
 const typeLabels: Record<string, string> = {
-    match: 'تطابق',
-    status: 'حالة',
-    system: 'نظام',
-    admin: 'إدارة',
+    match: 'Match',
+    status: 'Status',
+    system: 'System',
+    admin: 'Admin',
 };
 
 export default function AdminNotifications() {
@@ -68,7 +68,7 @@ export default function AdminNotifications() {
             const data = await getAllNotifications();
             setNotifications(data);
         } catch (error) {
-            console.error('خطأ في تحميل الإشعارات:', error);
+            console.error('Error loading notifications:', error);
         } finally {
             setIsLoading(false);
         }
@@ -78,9 +78,9 @@ export default function AdminNotifications() {
         const success = await deleteNotification(id);
         if (success) {
             setNotifications(prev => prev.filter(n => n.id !== id));
-            toast.success('تم حذف الإشعار');
+            toast.success('Notification deleted');
         } else {
-            toast.error('خطأ في حذف الإشعار');
+            toast.error('Error deleting notification');
         }
     };
 
@@ -106,9 +106,9 @@ export default function AdminNotifications() {
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
                     <Bell className="h-8 w-8 text-primary" />
-                    إدارة الإشعارات
+                    Manage Notifications
                 </h1>
-                <p className="text-muted-foreground mt-1">عرض وإدارة جميع إشعارات النظام</p>
+                <p className="text-muted-foreground mt-1">View and manage all system notifications</p>
             </div>
 
             {/* Stats */}
@@ -120,7 +120,7 @@ export default function AdminNotifications() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold">{stats.total}</p>
-                            <p className="text-sm text-muted-foreground">إجمالي الإشعارات</p>
+                            <p className="text-sm text-muted-foreground">Total Notifications</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -131,7 +131,7 @@ export default function AdminNotifications() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold">{stats.unread}</p>
-                            <p className="text-sm text-muted-foreground">غير مقروءة</p>
+                            <p className="text-sm text-muted-foreground">Unread</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -142,7 +142,7 @@ export default function AdminNotifications() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold">{stats.match}</p>
-                            <p className="text-sm text-muted-foreground">إشعارات تطابق</p>
+                            <p className="text-sm text-muted-foreground">Match Notifications</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -153,7 +153,7 @@ export default function AdminNotifications() {
                         </div>
                         <div>
                             <p className="text-2xl font-bold">{stats.status}</p>
-                            <p className="text-sm text-muted-foreground">إشعارات حالة</p>
+                            <p className="text-sm text-muted-foreground">Status Notifications</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -166,7 +166,7 @@ export default function AdminNotifications() {
                         <div className="flex-1 relative">
                             <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input
-                                placeholder="بحث في الإشعارات..."
+                                placeholder="Search notifications..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="pr-10"
@@ -177,11 +177,11 @@ export default function AdminNotifications() {
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">جميع الأنواع</SelectItem>
-                                <SelectItem value="match">تطابق</SelectItem>
-                                <SelectItem value="status">حالة</SelectItem>
-                                <SelectItem value="system">نظام</SelectItem>
-                                <SelectItem value="admin">إدارة</SelectItem>
+                                <SelectItem value="all">All Types</SelectItem>
+                                <SelectItem value="match">Match</SelectItem>
+                                <SelectItem value="status">Status</SelectItem>
+                                <SelectItem value="system">System</SelectItem>
+                                <SelectItem value="admin">Admin</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
@@ -198,7 +198,7 @@ export default function AdminNotifications() {
                     ) : filteredNotifications.length === 0 ? (
                         <div className="text-center py-20">
                             <Bell className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                            <p className="text-lg font-medium">لا توجد إشعارات</p>
+                            <p className="text-lg font-medium">No notifications</p>
                         </div>
                     ) : (
                         <div className="divide-y">
@@ -231,7 +231,7 @@ export default function AdminNotifications() {
                                                         {typeLabels[notification.type] || notification.type}
                                                     </Badge>
                                                     {!notification.is_read && (
-                                                        <Badge variant="default" className="text-xs">جديد</Badge>
+                                                        <Badge variant="default" className="text-xs">New</Badge>
                                                     )}
                                                 </div>
                                                 <p className="text-muted-foreground text-sm line-clamp-2">
@@ -240,7 +240,7 @@ export default function AdminNotifications() {
                                                 <div className="flex items-center gap-4 mt-2">
                                                     <span className="text-xs text-muted-foreground flex items-center gap-1">
                                                         <Clock className="h-3 w-3" />
-                                                        {new Date(notification.created_at).toLocaleDateString('ar-SA', {
+                                                        {new Date(notification.created_at).toLocaleDateString('en-US', {
                                                             year: 'numeric',
                                                             month: 'short',
                                                             day: 'numeric',

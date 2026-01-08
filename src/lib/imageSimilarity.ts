@@ -1,12 +1,12 @@
 /**
- * خوارزمية تشابه الصور المتقدمة
- * تستخدم Perceptual Hash (pHash) وColor Histogram
+ * Advanced Image Similarity Algorithm
+ * Uses Perceptual Hash (pHash) and Color Histogram
  */
 
 // ==================== Perceptual Hash (pHash) ====================
 
 /**
- * تحميل صورة وتحويلها إلى ImageData
+ * Load image and convert to ImageData
  */
 async function loadImage(url: string): Promise<ImageData | null> {
     return new Promise((resolve) => {
@@ -22,7 +22,7 @@ async function loadImage(url: string): Promise<ImageData | null> {
                 return;
             }
 
-            // تصغير الصورة لـ 32x32 للـ pHash
+            // Resize image to 32x32 for pHash
             canvas.width = 32;
             canvas.height = 32;
             ctx.drawImage(img, 0, 0, 32, 32);
@@ -31,7 +31,7 @@ async function loadImage(url: string): Promise<ImageData | null> {
         };
 
         img.onerror = () => {
-            console.error('خطأ في تحميل الصورة:', url);
+            console.error('Error loading image:', url);
             resolve(null);
         };
 
@@ -40,14 +40,14 @@ async function loadImage(url: string): Promise<ImageData | null> {
 }
 
 /**
- * تحويل الصورة إلى grayscale
+ * Convert image to grayscale
  */
 function toGrayscale(imageData: ImageData): number[] {
     const gray: number[] = [];
     const { data } = imageData;
 
     for (let i = 0; i < data.length; i += 4) {
-        // استخدام معادلة Luminosity للحصول على grayscale
+        // Use Luminosity formula to get grayscale
         const grayValue = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
         gray.push(grayValue);
     }
@@ -56,7 +56,7 @@ function toGrayscale(imageData: ImageData): number[] {
 }
 
 /**
- * تطبيق DCT (Discrete Cosine Transform) مبسط
+ * Apply simplified DCT (Discrete Cosine Transform)
  */
 function simpleDCT(matrix: number[], size: number): number[] {
     const dct: number[] = [];
@@ -83,26 +83,26 @@ function simpleDCT(matrix: number[], size: number): number[] {
 }
 
 /**
- * حساب pHash للصورة
+ * Calculate pHash for image
  */
 export async function calculatePHash(imageUrl: string): Promise<string | null> {
     try {
         const imageData = await loadImage(imageUrl);
         if (!imageData) return null;
 
-        // تحويل إلى grayscale
+        // Convert to grayscale
         const gray = toGrayscale(imageData);
 
-        // تطبيق DCT
+        // Apply DCT
         const dct = simpleDCT(gray, 32);
 
-        // أخذ أول 64 قيمة (8x8) بعد القيمة الأولى
+        // Take first 64 values (8x8) after the first value
         const dctLowFreq = dct.slice(1, 65);
 
-        // حساب المتوسط
+        // Calculate average
         const avg = dctLowFreq.reduce((a, b) => a + b, 0) / dctLowFreq.length;
 
-        // إنشاء البصمة (hash)
+        // Create fingerprint (hash)
         let hash = '';
         for (const val of dctLowFreq) {
             hash += val > avg ? '1' : '0';
@@ -110,16 +110,16 @@ export async function calculatePHash(imageUrl: string): Promise<string | null> {
 
         return hash;
     } catch (error) {
-        console.error('خطأ في حساب pHash:', error);
+        console.error('Error calculating pHash:', error);
         return null;
     }
 }
 
 /**
- * حساب مسافة Hamming بين بصمتين
+ * Calculate Hamming distance between two fingerprints
  */
 export function hammingDistance(hash1: string, hash2: string): number {
-    if (hash1.length !== hash2.length) return 64; // أقصى مسافة
+    if (hash1.length !== hash2.length) return 64; // Maximum distance
 
     let distance = 0;
     for (let i = 0; i < hash1.length; i++) {
@@ -130,7 +130,7 @@ export function hammingDistance(hash1: string, hash2: string): number {
 }
 
 /**
- * تحويل مسافة Hamming إلى نسبة تشابه
+ * Convert Hamming distance to similarity percentage
  */
 export function hashSimilarity(hash1: string, hash2: string): number {
     const distance = hammingDistance(hash1, hash2);
@@ -140,7 +140,7 @@ export function hashSimilarity(hash1: string, hash2: string): number {
 // ==================== Color Histogram ====================
 
 /**
- * حساب Color Histogram للصورة
+ * Calculate Color Histogram for image
  */
 async function calculateColorHistogram(imageUrl: string): Promise<number[] | null> {
     return new Promise((resolve) => {
@@ -156,7 +156,7 @@ async function calculateColorHistogram(imageUrl: string): Promise<number[] | nul
                 return;
             }
 
-            // تصغير لـ 64x64 للسرعة
+            // Resize to 64x64 for speed
             canvas.width = 64;
             canvas.height = 64;
             ctx.drawImage(img, 0, 0, 64, 64);
@@ -164,7 +164,7 @@ async function calculateColorHistogram(imageUrl: string): Promise<number[] | nul
             const imageData = ctx.getImageData(0, 0, 64, 64);
             const { data } = imageData;
 
-            // Histogram لكل قناة لون (8 bins لكل قناة)
+            // Histogram for each color channel (8 bins per channel)
             const bins = 8;
             const histR = new Array(bins).fill(0);
             const histG = new Array(bins).fill(0);
@@ -180,7 +180,7 @@ async function calculateColorHistogram(imageUrl: string): Promise<number[] | nul
                 histB[binB]++;
             }
 
-            // تطبيع
+            // Normalize
             const total = 64 * 64;
             const histogram = [
                 ...histR.map(v => v / total),
@@ -197,7 +197,7 @@ async function calculateColorHistogram(imageUrl: string): Promise<number[] | nul
 }
 
 /**
- * حساب تشابه الـ Histogram باستخدام Cosine Similarity
+ * Calculate Histogram similarity using Cosine Similarity
  */
 function histogramSimilarity(hist1: number[], hist2: number[]): number {
     let dotProduct = 0;
@@ -218,7 +218,7 @@ function histogramSimilarity(hist1: number[], hist2: number[]): number {
 // ==================== Average Hash (aHash) - Simpler Alternative ====================
 
 /**
- * حساب aHash (بسيط وسريع)
+ * Calculate aHash (simple and fast)
  */
 export async function calculateAHash(imageUrl: string): Promise<string | null> {
     return new Promise((resolve) => {
@@ -234,7 +234,7 @@ export async function calculateAHash(imageUrl: string): Promise<string | null> {
                 return;
             }
 
-            // تصغير لـ 8x8
+            // Resize to 8x8
             canvas.width = 8;
             canvas.height = 8;
             ctx.drawImage(img, 0, 0, 8, 8);
@@ -242,7 +242,7 @@ export async function calculateAHash(imageUrl: string): Promise<string | null> {
             const imageData = ctx.getImageData(0, 0, 8, 8);
             const { data } = imageData;
 
-            // تحويل إلى grayscale وحساب المتوسط
+            // Convert to grayscale and calculate average
             const gray: number[] = [];
             for (let i = 0; i < data.length; i += 4) {
                 gray.push(data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
@@ -250,7 +250,7 @@ export async function calculateAHash(imageUrl: string): Promise<string | null> {
 
             const avg = gray.reduce((a, b) => a + b, 0) / gray.length;
 
-            // إنشاء البصمة
+            // Create fingerprint
             let hash = '';
             for (const val of gray) {
                 hash += val > avg ? '1' : '0';
@@ -274,7 +274,7 @@ export interface ImageSimilarityResult {
 }
 
 /**
- * حساب التشابه بين صورتين
+ * Calculate similarity between two images
  */
 export async function calculateImageSimilarity(
     imageUrl1: string,
@@ -285,7 +285,7 @@ export async function calculateImageSimilarity(
     }
 
     try {
-        // حساب pHash لكلا الصورتين (نستخدم aHash لأنه أسرع)
+        // Calculate pHash for both images (using aHash as it's faster)
         const [hash1, hash2, hist1, hist2] = await Promise.all([
             calculateAHash(imageUrl1),
             calculateAHash(imageUrl2),
@@ -293,19 +293,19 @@ export async function calculateImageSimilarity(
             calculateColorHistogram(imageUrl2),
         ]);
 
-        // حساب تشابه pHash
+        // Calculate pHash similarity
         let pHashScore = 0;
         if (hash1 && hash2) {
             pHashScore = hashSimilarity(hash1, hash2);
         }
 
-        // حساب تشابه الألوان
+        // Calculate color similarity
         let colorScore = 0;
         if (hist1 && hist2) {
             colorScore = histogramSimilarity(hist1, hist2);
         }
 
-        // الدرجة الإجمالية
+        // Overall score
         const overall = pHashScore * 0.6 + colorScore * 0.4;
 
         return {
@@ -315,13 +315,13 @@ export async function calculateImageSimilarity(
             hasImages: true,
         };
     } catch (error) {
-        console.error('خطأ في حساب تشابه الصور:', error);
+        console.error('Error calculating image similarity:', error);
         return { overall: 0, pHashScore: 0, colorScore: 0, hasImages: false };
     }
 }
 
 /**
- * مقارنة مجموعات صور
+ * Compare image sets
  */
 export async function compareImageSets(
     images1: string[],
@@ -331,8 +331,8 @@ export async function compareImageSets(
 
     let maxScore = 0;
 
-    // مقارنة كل صورة من المجموعة الأولى مع كل صورة من الثانية
-    for (const img1 of images1.slice(0, 3)) { // أول 3 صور فقط للسرعة
+    // Compare each image from first set with each image from second set
+    for (const img1 of images1.slice(0, 3)) { // Only first 3 images for speed
         for (const img2 of images2.slice(0, 3)) {
             const result = await calculateImageSimilarity(img1, img2);
             maxScore = Math.max(maxScore, result.overall);

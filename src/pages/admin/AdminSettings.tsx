@@ -7,16 +7,16 @@ export default function AdminSettings() {
     return (
         <Layout>
             <div className="container py-10">
-                <h1 className="text-3xl font-bold mb-8">الإعدادات</h1>
+                <h1 className="text-3xl font-bold mb-8">Settings</h1>
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Settings className="h-6 w-6" />
-                            إعدادات النظام
+                            System Settings
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground">جاري العمل على هذه الصفحة...</p>
+                        <p className="text-muted-foreground">This page is under construction...</p>
                     </CardContent>
                 </Card>
             </div>

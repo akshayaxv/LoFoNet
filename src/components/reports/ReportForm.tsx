@@ -43,14 +43,14 @@ import {
 } from '@/services/browserNotificationService';
 
 const categories: { value: ItemCategory; label: string }[] = [
-  { value: 'electronics', label: 'إلكترونيات' },
-  { value: 'documents', label: 'وثائق' },
-  { value: 'jewelry', label: 'مجوهرات' },
-  { value: 'bags', label: 'حقائب ومحافظ' },
-  { value: 'keys', label: 'مفاتيح' },
-  { value: 'pets', label: 'حيوانات أليفة' },
-  { value: 'clothing', label: 'ملابس' },
-  { value: 'other', label: 'أخرى' },
+  { value: 'electronics', label: 'Electronics' },
+  { value: 'documents', label: 'Documents' },
+  { value: 'jewelry', label: 'Jewelry' },
+  { value: 'bags', label: 'Bags & Wallets' },
+  { value: 'keys', label: 'Keys' },
+  { value: 'pets', label: 'Pets' },
+  { value: 'clothing', label: 'Clothing' },
+  { value: 'other', label: 'Other' },
 ];
 
 import { cities } from '@/data/mockData';
@@ -81,19 +81,19 @@ export function ReportForm() {
   const [dateOccurred, setDateOccurred] = useState('');
   const [showMap, setShowMap] = useState(false);
 
-  // التحقق من حالة الإشعارات عند التحميل
+  // Check notification status on load
   useEffect(() => {
     setNotificationsEnabled(hasUserAcceptedNotifications());
     setShowNotificationPrompt(shouldAskForNotifications());
   }, []);
 
-  // طلب تفعيل الإشعارات
+  // Request notification permission
   const handleEnableNotifications = async () => {
     const permission = await requestNotificationPermission();
     setNotificationsEnabled(permission === 'granted');
     setShowNotificationPrompt(false);
     if (permission === 'granted') {
-      toast.success('تم تفعيل الإشعارات بنجاح!');
+      toast.success('Notifications enabled successfully!');
     }
   };
 
@@ -118,27 +118,27 @@ export function ReportForm() {
 
   const validateForm = () => {
     if (!title.trim()) {
-      toast.error('يرجى إدخال عنوان البلاغ');
+      toast.error('Please enter report title');
       return false;
     }
     if (!category) {
-      toast.error('يرجى اختيار نوع العنصر');
+      toast.error('Please select item type');
       return false;
     }
     if (!description.trim()) {
-      toast.error('يرجى إدخال وصف تفصيلي');
+      toast.error('Please enter detailed description');
       return false;
     }
     if (!locationAddress.trim()) {
-      toast.error('يرجى إدخال الموقع');
+      toast.error('Please enter location');
       return false;
     }
     if (!locationCity) {
-      toast.error('يرجى اختيار المدينة');
+      toast.error('Please select city');
       return false;
     }
     if (!dateOccurred) {
-      toast.error('يرجى تحديد التاريخ');
+      toast.error('Please select date');
       return false;
     }
     return true;
@@ -150,7 +150,7 @@ export function ReportForm() {
     if (!validateForm()) return;
 
     if (!user) {
-      toast.error('يجب تسجيل الدخول أولاً');
+      toast.error('Please login first');
       navigate('/login');
       return;
     }
@@ -174,16 +174,16 @@ export function ReportForm() {
       }, uploadedFiles.length > 0 ? uploadedFiles : undefined);
 
       if (result.success) {
-        toast.success('تم تقديم البلاغ بنجاح!', {
-          description: 'سنقوم بتحليل بلاغك ومقارنته مع البلاغات الأخرى',
+        toast.success('Report submitted successfully!', {
+          description: 'We will analyze your report and compare it with other reports',
         });
         navigate('/reports');
       } else {
-        toast.error(result.error || 'حدث خطأ أثناء تقديم البلاغ');
+        toast.error(result.error || 'An error occurred while submitting the report');
       }
     } catch (error) {
-      console.error('خطأ في تقديم البلاغ:', error);
-      toast.error('حدث خطأ غير متوقع');
+      console.error('Error submitting report:', error);
+      toast.error('An unexpected error occurred');
     } finally {
       setIsSubmitting(false);
     }
@@ -193,9 +193,9 @@ export function ReportForm() {
     <div className="max-w-xl mx-auto pb-20 md:pb-0">
       <Card className="border-0 shadow-none md:border md:shadow-sm bg-transparent md:bg-card">
         <CardHeader className="text-center pb-2">
-          <CardTitle className="text-2xl">تقديم بلاغ جديد</CardTitle>
+          <CardTitle className="text-2xl">Submit New Report</CardTitle>
           <CardDescription>
-            أدخل تفاصيل العنصر بدقة لزيادة فرص المطابقة
+            Enter item details accurately to increase matching chances
           </CardDescription>
         </CardHeader>
 
@@ -206,14 +206,14 @@ export function ReportForm() {
               <Bell className="h-4 w-4 text-primary" />
               <AlertDescription className="flex items-center justify-between">
                 <span>
-                  فعّل الإشعارات لتصلك تنبيهات عند العثور على تطابق لبلاغك
+                  Enable notifications to receive alerts when a match is found for your report
                 </span>
                 <Button
                   size="sm"
                   onClick={handleEnableNotifications}
-                  className="mr-4"
+                  className="ml-4"
                 >
-                  تفعيل
+                  Enable
                 </Button>
               </AlertDescription>
             </Alert>
@@ -222,7 +222,7 @@ export function ReportForm() {
           {notificationsEnabled && (
             <div className="mb-4 text-xs text-success flex items-center gap-1">
               <CheckCircle className="h-3 w-3" />
-              الإشعارات مفعلة - ستصلك تنبيهات عند العثور على تطابق
+              Notifications enabled - You'll receive alerts when a match is found
             </div>
           )}
 
@@ -238,7 +238,7 @@ export function ReportForm() {
               onClick={() => setReportType('lost')}
             >
               <Search className="h-4 w-4" />
-              فقدت شيئاً
+              I Lost Something
             </Button>
             <Button
               type="button"
@@ -250,7 +250,7 @@ export function ReportForm() {
               onClick={() => setReportType('found')}
             >
               <MapPin className="h-4 w-4" />
-              وجدت شيئاً
+              I Found Something
             </Button>
           </div>
 
@@ -259,15 +259,14 @@ export function ReportForm() {
             <div className="space-y-2">
               <Label htmlFor="title" className="flex items-center gap-2">
                 <Tag className="h-4 w-4 text-primary" />
-                عنوان البلاغ
+                Report Title
               </Label>
               <Input
                 id="title"
-                placeholder="مثال: هاتف آيفون 14 برو"
+                placeholder="Example: iPhone 14 Pro"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="text-right"
               />
             </div>
 
@@ -275,11 +274,11 @@ export function ReportForm() {
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <FileText className="h-4 w-4 text-primary" />
-                نوع العنصر
+                Item Type
               </Label>
               <Select value={category} onValueChange={(v) => setCategory(v as ItemCategory)}>
                 <SelectTrigger>
-                  <SelectValue placeholder="اختر نوع العنصر" />
+                  <SelectValue placeholder="Select item type" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((cat) => (
@@ -295,14 +294,13 @@ export function ReportForm() {
             <div className="space-y-2">
               <Label htmlFor="color" className="flex items-center gap-2">
                 <Palette className="h-4 w-4 text-primary" />
-                اللون
+                Color
               </Label>
               <Input
                 id="color"
-                placeholder="مثال: أزرق داكن"
+                placeholder="Example: Dark blue"
                 value={color}
                 onChange={(e) => setColor(e.target.value)}
-                className="text-right"
               />
             </div>
 
@@ -310,15 +308,15 @@ export function ReportForm() {
             <div className="space-y-2">
               <Label htmlFor="description" className="flex items-center gap-2">
                 <FileText className="h-4 w-4 text-primary" />
-                الوصف التفصيلي
+                Detailed Description
               </Label>
               <Textarea
                 id="description"
-                placeholder="اكتب وصفاً دقيقاً للعنصر يشمل العلامات المميزة والحالة..."
+                placeholder="Write a detailed description of the item including distinguishing marks and condition..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
-                className="min-h-[120px] text-right resize-none"
+                className="min-h-[120px] resize-none"
               />
             </div>
 
@@ -326,15 +324,14 @@ export function ReportForm() {
             <div className="space-y-2">
               <Label htmlFor="marks" className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-primary" />
-                علامات مميزة
-                <span className="text-xs text-muted-foreground">(اختياري)</span>
+                Distinguishing Marks
+                <span className="text-xs text-muted-foreground">(optional)</span>
               </Label>
               <Input
                 id="marks"
-                placeholder="مثال: خدش صغير على الزاوية"
+                placeholder="Example: Small scratch on corner"
                 value={distinguishingMarks}
                 onChange={(e) => setDistinguishingMarks(e.target.value)}
-                className="text-right"
               />
             </div>
 
@@ -342,7 +339,7 @@ export function ReportForm() {
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <Upload className="h-4 w-4 text-primary" />
-                الصور (حتى 5 صور)
+                Images (up to 5 images)
               </Label>
               <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 transition-colors">
                 <input
@@ -357,10 +354,10 @@ export function ReportForm() {
                 <label htmlFor="images" className="cursor-pointer">
                   <Upload className="h-10 w-10 mx-auto text-muted-foreground mb-2" />
                   <p className="text-sm text-muted-foreground">
-                    اضغط لرفع الصور أو اسحبها هنا
+                    Click to upload images or drag them here
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    PNG, JPG حتى 10MB
+                    PNG, JPG up to 10MB
                   </p>
                 </label>
               </div>
@@ -372,7 +369,7 @@ export function ReportForm() {
                     <div key={index} className="relative group">
                       <img
                         src={url}
-                        alt={`صورة ${index + 1}`}
+                        alt={`Image ${index + 1}`}
                         className="w-20 h-20 object-cover rounded-lg border"
                       />
                       <button
@@ -392,11 +389,11 @@ export function ReportForm() {
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <Building2 className="h-4 w-4 text-primary" />
-                المدينة
+                City
               </Label>
               <Select value={locationCity} onValueChange={setLocationCity}>
                 <SelectTrigger>
-                  <SelectValue placeholder="اختر المدينة" />
+                  <SelectValue placeholder="Select city" />
                 </SelectTrigger>
                 <SelectContent>
                   {cities.map((city) => (
@@ -413,7 +410,7 @@ export function ReportForm() {
               <Label htmlFor="location" className="flex items-center justify-between">
                 <span className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-primary" />
-                  الموقع التقريبي
+                  Approximate Location
                 </span>
                 <Button
                   type="button"
@@ -423,23 +420,22 @@ export function ReportForm() {
                   className="gap-1 text-xs"
                 >
                   <Map className="h-3 w-3" />
-                  {showMap ? 'إخفاء الخريطة' : 'تحديد على الخريطة'}
+                  {showMap ? 'Hide Map' : 'Select on Map'}
                 </Button>
               </Label>
               <Input
                 id="location"
-                placeholder="مثال: شارع التحرير، أمام الجامعة"
+                placeholder="Example: Main Street, near University"
                 value={locationAddress}
                 onChange={(e) => setLocationAddress(e.target.value)}
                 required
-                className="text-right"
               />
 
               {/* GPS Indicator */}
               {locationLat && locationLng && (
                 <div className="text-xs text-success flex items-center gap-1">
                   <CheckCircle className="h-3 w-3" />
-                  تم تحديد الموقع: {locationLat.toFixed(4)}, {locationLng.toFixed(4)}
+                  Location selected: {locationLat.toFixed(4)}, {locationLng.toFixed(4)}
                 </div>
               )}
 
@@ -463,7 +459,7 @@ export function ReportForm() {
             <div className="space-y-2">
               <Label htmlFor="date" className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-primary" />
-                {reportType === 'lost' ? 'تاريخ الفقدان' : 'تاريخ العثور'}
+                {reportType === 'lost' ? 'Date Lost' : 'Date Found'}
               </Label>
               <Input
                 id="date"
@@ -471,7 +467,6 @@ export function ReportForm() {
                 value={dateOccurred}
                 onChange={(e) => setDateOccurred(e.target.value)}
                 required
-                className="text-right"
               />
             </div>
 
@@ -480,11 +475,10 @@ export function ReportForm() {
               <Sparkles className="h-5 w-5 text-primary mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-foreground">
-                  تحليل بالذكاء الاصطناعي
+                  AI Analysis
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  سيتم تحليل بلاغك ومقارنته تلقائياً مع البلاغات الأخرى للعثور على
-                  تطابقات محتملة
+                  Your report will be automatically analyzed and compared with other reports to find potential matches
                 </p>
               </div>
             </div>
@@ -500,12 +494,12 @@ export function ReportForm() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  جاري إرسال البلاغ...
+                  Submitting Report...
                 </>
               ) : (
                 <>
                   <CheckCircle className="h-5 w-5" />
-                  تقديم البلاغ
+                  Submit Report
                 </>
               )}
             </Button>

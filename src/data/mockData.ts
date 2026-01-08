@@ -1,59 +1,72 @@
 // ==================== Labels Only - No Mock Data ====================
 
 export const categoryLabels: Record<string, string> = {
-  electronics: 'إلكترونيات',
-  documents: 'وثائق',
-  jewelry: 'مجوهرات',
-  bags: 'حقائب ومحافظ',
-  keys: 'مفاتيح',
-  pets: 'حيوانات أليفة',
-  clothing: 'ملابس',
-  other: 'أخرى',
+  electronics: 'Electronics',
+  documents: 'Documents',
+  jewelry: 'Jewelry',
+  bags: 'Bags & Wallets',
+  keys: 'Keys',
+  pets: 'Pets',
+  clothing: 'Clothing',
+  other: 'Other',
 };
 
 export const statusLabels: Record<string, string> = {
-  pending: 'قيد الانتظار',
-  processing: 'جاري الفحص',
-  matched: 'تم التطابق',
-  contacted: 'تم التواصل',
-  closed: 'مغلق',
+  pending: 'Pending',
+  processing: 'Processing',
+  matched: 'Matched',
+  contacted: 'Contacted',
+  closed: 'Closed',
 };
 
-// قائمة مدن عامة (يمكن استبدالها بـ API أو قائمة أوسع لاحقاً)
+// List of major Indian cities (can be replaced with API or broader list later)
 export const cities = [
-  'الرياض',
-  'جدة',
-  'الدمام',
-  'دبي',
-  'أبو ظبي',
-  'الكويت',
-  'المنامة',
-  'الدوحة',
-  'مسقط',
-  'بيروت',
-  'عمّان',
-  'القاهرة',
-  'الإسكندرية',
-  'الدار البيضاء',
-  'تونس',
-  'الجزائر',
-  'خرطوم',
-  'بغداد',
-  'أربيل',
-  'صنعاء',
-  'عدن',
-  'أخرى',
+  'Mumbai',
+  'Delhi',
+  'Bangalore',
+  'Hyderabad',
+  'Chennai',
+  'Kolkata',
+  'Pune',
+  'Ahmedabad',
+  'Jaipur',
+  'Surat',
+  'Lucknow',
+  'Kanpur',
+  'Nagpur',
+  'Indore',
+  'Thane',
+  'Bhopal',
+  'Visakhapatnam',
+  'Patna',
+  'Vadodara',
+  'Ghaziabad',
+  'Ludhiana',
+  'Agra',
+  'Nashik',
+  'Faridabad',
+  'Meerut',
+  'Rajkot',
+  'Varanasi',
+  'Srinagar',
+  'Amritsar',
+  'Coimbatore',
+  'Kochi',
+  'Chandigarh',
+  'Guwahati',
+  'Thiruvananthapuram',
+  'Other',
 ];
 
-// التحقق من رقم الجوال (عام)
+// Phone number validation (general)
 export function validatePhone(phone: string): boolean {
-  // يقبل الأرقام التي تبدأ بـ + أو 00، وتحتوي على 7 إلى 15 رقم
+  // Accepts numbers starting with + or 00, containing 7 to 15 digits
   const cleanPhone = phone.replace(/\s|-/g, '');
   return /^(\+|00)?[0-9]{7,15}$/.test(cleanPhone);
 }
 
-// تنسيق رقم الجوال (عام)
+// Phone number formatting (general)
 export function formatPhone(phone: string): string {
-  // إزالة الرموز غير الرقمية ما عدا +
+  // Remove non-numeric characters except +
   return phone.replace(/[^0-9+]/g, '');
 }
