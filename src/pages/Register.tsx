@@ -157,7 +157,8 @@ export default function Register() {
                                     placeholder="John Doe"
                                     value={formData.name}
                                     onChange={handleChange}
-                                    className="h-12"
+                                    className="h-12 text-left"
+                                    dir="ltr"
                                     required
                                 />
                             </div>
@@ -175,7 +176,8 @@ export default function Register() {
                                     placeholder="example@email.com"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className="h-12"
+                                    className="h-12 text-left"
+                                    dir="ltr"
                                     required
                                 />
                             </div>
@@ -195,7 +197,8 @@ export default function Register() {
                                         placeholder="+1234567890"
                                         value={formData.phone}
                                         onChange={handleChange}
-                                        className="h-12"
+                                        className="h-12 text-left"
+                                        dir="ltr"
                                     />
                                 </div>
                             </div>
@@ -214,7 +217,8 @@ export default function Register() {
                                         placeholder="••••••••"
                                         value={formData.password}
                                         onChange={handleChange}
-                                        className="h-12 pr-12"
+                                        className="h-12 pr-12 text-left"
+                                        dir="ltr"
                                         required
                                     />
                                     <button
@@ -258,7 +262,8 @@ export default function Register() {
                                         placeholder="••••••••"
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
-                                        className="h-12 pr-12"
+                                        className="h-12 pr-12 text-left"
+                                        dir="ltr"
                                         required
                                     />
                                     {formData.confirmPassword && formData.password === formData.confirmPassword && (

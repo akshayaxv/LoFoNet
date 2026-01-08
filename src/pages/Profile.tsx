@@ -116,7 +116,8 @@ export default function Profile() {
                                                     id="name"
                                                     value={name}
                                                     onChange={(e) => setName(e.target.value)}
-                                                    className="pl-10"
+                                                    className="pl-10 text-left"
+                                                    dir="ltr"
                                                     placeholder="Your full name"
                                                 />
                                             </div>
@@ -130,7 +131,8 @@ export default function Profile() {
                                                     id="email"
                                                     value={user.email}
                                                     disabled
-                                                    className="pl-10 bg-muted"
+                                                    className="pl-10 bg-muted text-left"
+                                                    dir="ltr"
                                                 />
                                             </div>
                                         </div>
@@ -143,7 +145,8 @@ export default function Profile() {
                                                     id="phone"
                                                     value={phone}
                                                     onChange={(e) => setPhone(e.target.value)}
-                                                    className="pl-10"
+                                                    className="pl-10 text-left"
+                                                    dir="ltr"
                                                     placeholder="+1234567890"
                                                 />
                                             </div>
@@ -187,7 +190,8 @@ export default function Profile() {
                                                     type="password"
                                                     value={currentPassword}
                                                     onChange={(e) => setCurrentPassword(e.target.value)}
-                                                    className="pl-10"
+                                                    className="pl-10 text-left"
+                                                    dir="ltr"
                                                 />
                                             </div>
                                         </div>
@@ -201,7 +205,8 @@ export default function Profile() {
                                                     type="password"
                                                     value={newPassword}
                                                     onChange={(e) => setNewPassword(e.target.value)}
-                                                    className="pl-10"
+                                                    className="pl-10 text-left"
+                                                    dir="ltr"
                                                 />
                                             </div>
                                         </div>
