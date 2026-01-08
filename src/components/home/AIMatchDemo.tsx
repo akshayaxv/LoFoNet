@@ -8,15 +8,15 @@ export function AIMatchDemo() {
   return (
     <section className="mb-10">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-foreground">قوة الذكاء الاصطناعي</h2>
-        <p className="text-muted-foreground mt-2">نظام مطابقة متعدد الوسائط</p>
+        <h2 className="text-2xl font-bold text-foreground">The Power of AI</h2>
+        <p className="text-muted-foreground mt-2">Multi-Modal Matching System</p>
       </div>
 
       <Card variant="glow" className="overflow-hidden">
         <CardHeader className="gradient-primary text-primary-foreground">
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5" />
-            مثال على عملية المطابقة
+            Matching Process Example
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
@@ -24,16 +24,16 @@ export function AIMatchDemo() {
             {/* Lost Item */}
             <Card className="border-destructive/30">
               <CardContent className="p-4">
-                <Badge variant="destructive" className="mb-3">بلاغ مفقود</Badge>
+                <Badge variant="destructive" className="mb-3">Lost Report</Badge>
                 <div className="aspect-video rounded-lg overflow-hidden mb-3 bg-muted">
                   <img
                     src="https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?w=300"
-                    alt="مفقود"
+                    alt="Lost"
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h4 className="font-bold text-sm">هاتف آيفون 14 برو</h4>
-                <p className="text-xs text-muted-foreground mt-1">لون أزرق داكن - الرياض</p>
+                <h4 className="font-bold text-sm">iPhone 14 Pro</h4>
+                <p className="text-xs text-muted-foreground mt-1">Dark Blue - Riyadh</p>
               </CardContent>
             </Card>
 
@@ -43,22 +43,22 @@ export function AIMatchDemo() {
                 <Sparkles className="h-8 w-8 text-primary-foreground" />
               </div>
               <ArrowLeftRight className="h-6 w-6 text-muted-foreground" />
-              <p className="text-sm font-medium text-center">جاري التحليل والمطابقة</p>
+              <p className="text-sm font-medium text-center">Analyzing and Matching</p>
             </div>
 
             {/* Found Item */}
             <Card className="border-success/30">
               <CardContent className="p-4">
-                <Badge variant="success" className="mb-3">بلاغ موجود</Badge>
+                <Badge variant="success" className="mb-3">Found Report</Badge>
                 <div className="aspect-video rounded-lg overflow-hidden mb-3 bg-muted">
                   <img
                     src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=300"
-                    alt="موجود"
+                    alt="Found"
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h4 className="font-bold text-sm">هاتف آيفون أزرق</h4>
-                <p className="text-xs text-muted-foreground mt-1">تم العثور عليه - الرياض</p>
+                <h4 className="font-bold text-sm">Blue iPhone</h4>
+                <p className="text-xs text-muted-foreground mt-1">Found - Riyadh</p>
               </CardContent>
             </Card>
           </div>
@@ -68,7 +68,7 @@ export function AIMatchDemo() {
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm">
                 <Image className="h-4 w-4 text-primary" />
-                <span>تشابه الصور</span>
+                <span>Image Similarity</span>
                 <span className="mr-auto font-bold">72%</span>
               </div>
               <Progress value={72} className="h-2" />
@@ -76,7 +76,7 @@ export function AIMatchDemo() {
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm">
                 <FileText className="h-4 w-4 text-primary" />
-                <span>تشابه النص</span>
+                <span>Text Similarity</span>
                 <span className="mr-auto font-bold">68%</span>
               </div>
               <Progress value={68} className="h-2" />
@@ -84,7 +84,7 @@ export function AIMatchDemo() {
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm">
                 <MapPin className="h-4 w-4 text-primary" />
-                <span>قرب الموقع</span>
+                <span>Location Proximity</span>
                 <span className="mr-auto font-bold">85%</span>
               </div>
               <Progress value={85} className="h-2" />
@@ -96,8 +96,8 @@ export function AIMatchDemo() {
             <div className="flex items-center gap-3">
               <CheckCircle className="h-8 w-8 text-success" />
               <div>
-                <p className="font-bold text-success">نسبة التطابق النهائية</p>
-                <p className="text-sm text-muted-foreground">تم حساب النتيجة: (صور × 0.6) + (نص × 0.4)</p>
+                <p className="font-bold text-success">Final Match Score</p>
+                <p className="text-sm text-muted-foreground">Score calculated: (images × 0.6) + (text × 0.4)</p>
               </div>
             </div>
             <div className="text-4xl font-bold text-success">70%</div>

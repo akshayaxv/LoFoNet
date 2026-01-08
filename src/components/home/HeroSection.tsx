@@ -14,29 +14,29 @@ export function HeroSection() {
       <div className="relative z-10 max-w-3xl">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 animate-fade-in">
           <Sparkles className="h-4 w-4" />
-          مدعوم بالذكاء الاصطناعي
+          Powered by AI
         </div>
 
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 animate-slide-up">
-          اعثر على مفقوداتك
-          <span className="text-gradient block mt-2">بسرعة وذكاء</span>
+          Find Your Lost Items
+          <span className="text-gradient block mt-2">Quickly and Smartly</span>
         </h1>
 
         <p className="text-lg text-muted-foreground mb-8 max-w-xl animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          نظام متطور يستخدم الذكاء الاصطناعي لمطابقة المفقودات والموجودات تلقائياً، مما يزيد فرصة استعادة ممتلكاتك.
+          Advanced system uses AI to automatically match lost and found items, increasing the chance of recovering your belongings.
         </p>
 
         <div className="flex flex-wrap gap-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
           <Link to="/new-report">
             <Button variant="hero" size="xl">
               <Search className="h-5 w-5" />
-              أبلغ عن مفقود
+              Report Lost Item
             </Button>
           </Link>
           <Link to="/new-report?type=found">
             <Button variant="hero-outline" size="xl">
               <MapPin className="h-5 w-5" />
-              أبلغ عن موجود
+              Report Found Item
             </Button>
           </Link>
         </div>
@@ -44,11 +44,11 @@ export function HeroSection() {
         <div className="mt-8 flex items-center gap-6 text-sm text-muted-foreground animate-fade-in" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center gap-2">
             <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
-            <span>+1200 بلاغ ناجح</span>
+            <span>1200+ Successful Reports</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-            <span>نسبة تطابق 34%</span>
+            <span>34% Match Rate</span>
           </div>
         </div>
       </div>
