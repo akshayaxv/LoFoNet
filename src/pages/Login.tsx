@@ -24,7 +24,7 @@ export default function Login() {
         e.preventDefault();
 
         if (!email || !password) {
-            toast.error('يرجى إدخال البريد الإلكتروني وكلمة المرور');
+            toast.error('Please enter email and password');
             return;
         }
 
@@ -34,15 +34,15 @@ export default function Login() {
             const result = await login({ email, password });
 
             if (result.success) {
-                toast.success('تم تسجيل الدخول بنجاح!', {
-                    description: `مرحباً ${result.user?.name}`,
+                toast.success('Login successful!', {
+                    description: `Welcome ${result.user?.name}`,
                 });
                 navigate(from, { replace: true });
             } else {
-                toast.error(result.error || 'فشل تسجيل الدخول');
+                toast.error(result.error || 'Login failed');
             }
         } catch (error) {
-            toast.error('حدث خطأ غير متوقع');
+            toast.error('An unexpected error occurred');
         } finally {
             setIsLoading(false);
         }
@@ -63,18 +63,18 @@ export default function Login() {
                         <div className="flex h-14 w-14 items-center justify-center rounded-2xl gradient-primary shadow-lg group-hover:shadow-xl transition-shadow">
                             <Search className="h-7 w-7 text-primary-foreground" />
                         </div>
-                        <div className="text-right">
-                            <h1 className="text-2xl font-bold text-foreground">مُرشد</h1>
-                            <p className="text-sm text-muted-foreground">نظام المفقودات الذكي</p>
+                        <div className="text-left">
+                            <h1 className="text-2xl font-bold text-foreground">Murshid</h1>
+                            <p className="text-sm text-muted-foreground">Smart Lost & Found System</p>
                         </div>
                     </Link>
                 </div>
 
                 <Card className="border-0 shadow-2xl bg-card/95 backdrop-blur">
                     <CardHeader className="text-center pb-2">
-                        <CardTitle className="text-2xl">تسجيل الدخول</CardTitle>
+                        <CardTitle className="text-2xl">Login</CardTitle>
                         <CardDescription>
-                            أدخل بياناتك للوصول إلى حسابك
+                            Enter your credentials to access your account
                         </CardDescription>
                     </CardHeader>
 
@@ -84,7 +84,7 @@ export default function Login() {
                             <div className="space-y-2">
                                 <Label htmlFor="email" className="flex items-center gap-2 text-sm font-medium">
                                     <Mail className="h-4 w-4 text-primary" />
-                                    البريد الإلكتروني
+                                    Email
                                 </Label>
                                 <Input
                                     id="email"
@@ -92,8 +92,7 @@ export default function Login() {
                                     placeholder="example@email.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="h-12 text-right"
-                                    dir="ltr"
+                                    className="h-12"
                                     required
                                 />
                             </div>
@@ -102,7 +101,7 @@ export default function Login() {
                             <div className="space-y-2">
                                 <Label htmlFor="password" className="flex items-center gap-2 text-sm font-medium">
                                     <Lock className="h-4 w-4 text-primary" />
-                                    كلمة المرور
+                                    Password
                                 </Label>
                                 <div className="relative">
                                     <Input
@@ -111,13 +110,13 @@ export default function Login() {
                                         placeholder="••••••••"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="h-12 pl-12"
+                                        className="h-12 pr-12"
                                         required
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                                     >
                                         {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                     </button>
@@ -125,12 +124,12 @@ export default function Login() {
                             </div>
 
                             {/* Forgot Password Link */}
-                            <div className="text-left">
+                            <div className="text-right">
                                 <Link
                                     to="/forgot-password"
                                     className="text-sm text-primary hover:underline"
                                 >
-                                    نسيت كلمة المرور؟
+                                    Forgot password?
                                 </Link>
                             </div>
 
@@ -145,11 +144,11 @@ export default function Login() {
                                 {isLoading ? (
                                     <>
                                         <Loader2 className="h-5 w-5 animate-spin" />
-                                        جاري تسجيل الدخول...
+                                        Logging in...
                                     </>
                                 ) : (
                                     <>
-                                        تسجيل الدخول
+                                        Login
                                         <ArrowRight className="h-5 w-5" />
                                     </>
                                 )}
@@ -163,7 +162,7 @@ export default function Login() {
                             </div>
                             <div className="relative flex justify-center text-xs uppercase">
                                 <span className="bg-card px-2 text-muted-foreground">
-                                    أو
+                                    OR
                                 </span>
                             </div>
                         </div>
@@ -171,9 +170,9 @@ export default function Login() {
                         {/* Register Link */}
                         <div className="text-center">
                             <p className="text-sm text-muted-foreground">
-                                ليس لديك حساب؟{' '}
+                                Don't have an account?{' '}
                                 <Link to="/register" className="text-primary font-medium hover:underline">
-                                    أنشئ حساباً جديداً
+                                    Create a new account
                                 </Link>
                             </p>
                         </div>
@@ -187,7 +186,7 @@ export default function Login() {
                         className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                         <ArrowRight className="h-4 w-4" />
-                        العودة للصفحة الرئيسية
+                        Back to home
                     </Link>
                 </div>
             </div>

@@ -14,7 +14,7 @@ const Reports = () => {
   const { user, isLoading: authLoading } = useAuth();
 
   useEffect(() => {
-    // انتظار حتى ينتهي تحميل المصادقة
+    // Wait until authentication loading is complete
     if (!authLoading) {
       loadReports();
     }
@@ -24,28 +24,28 @@ const Reports = () => {
     setIsLoading(true);
     setError(null);
     try {
-      // جلب جميع البلاغات إذا كان Admin، أو بلاغات المستخدم فقط
+      // Fetch all reports if Admin, or only user's reports
       const filters = user && user.role !== 'admin' ? { userId: user.id } : {};
-      console.log('جاري جلب البلاغات بالفلتر:', filters);
+      console.log('Fetching reports with filter:', filters);
       const data = await getReports(filters);
-      console.log('تم جلب البلاغات:', data.length);
+      console.log('Reports fetched:', data.length);
       setReports(data);
     } catch (err) {
-      console.error('خطأ في تحميل البلاغات:', err);
-      setError('حدث خطأ أثناء تحميل البلاغات');
+      console.error('Error loading reports:', err);
+      setError('An error occurred while loading reports');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // عرض التحميل أثناء تحميل المصادقة أو البلاغات
+  // Show loading while authentication or reports are loading
   if (authLoading || isLoading) {
     return (
       <Layout>
         <div className="flex items-center justify-center py-20">
           <div className="text-center space-y-4">
             <Loader2 className="h-10 w-10 animate-spin text-primary mx-auto" />
-            <p className="text-muted-foreground">جاري تحميل البلاغات...</p>
+            <p className="text-muted-foreground">Loading reports...</p>
           </div>
         </div>
       </Layout>
@@ -56,15 +56,15 @@ const Reports = () => {
     <Layout>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">البلاغات</h1>
+          <h1 className="text-3xl font-bold text-foreground">Reports</h1>
           <p className="text-muted-foreground mt-2">
-            {user?.role === 'admin' ? 'جميع البلاغات المسجلة' : 'بلاغاتك المسجلة'}
+            {user?.role === 'admin' ? 'All registered reports' : 'Your registered reports'}
           </p>
         </div>
         <Link to="/new-report">
           <Button variant="hero">
             <Plus className="h-4 w-4" />
-            بلاغ جديد
+            New Report
           </Button>
         </Link>
       </div>
@@ -72,21 +72,21 @@ const Reports = () => {
       {error ? (
         <div className="text-center py-20">
           <AlertCircle className="h-16 w-16 text-destructive mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">حدث خطأ</h3>
+          <h3 className="text-xl font-semibold mb-2">An error occurred</h3>
           <p className="text-muted-foreground">{error}</p>
           <Button variant="outline" className="mt-4" onClick={loadReports}>
-            إعادة المحاولة
+            Retry
           </Button>
         </div>
       ) : reports.length === 0 ? (
         <div className="text-center py-20">
           <AlertCircle className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">لا توجد بلاغات</h3>
-          <p className="text-muted-foreground mb-4">لم يتم تسجيل أي بلاغات بعد</p>
+          <h3 className="text-xl font-semibold mb-2">No reports</h3>
+          <p className="text-muted-foreground mb-4">No reports have been registered yet</p>
           <Link to="/new-report">
             <Button variant="hero">
               <Plus className="h-4 w-4" />
-              سجل أول بلاغ
+              Register first report
             </Button>
           </Link>
         </div>

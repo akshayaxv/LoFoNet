@@ -57,15 +57,15 @@ export default function Notifications() {
             const data = await getUserNotifications(user.id);
             setNotifications(data);
         } catch (error) {
-            console.error('خطأ في تحميل الإشعارات:', error);
+            console.error('Error loading notifications:', error);
         } finally {
             setIsLoading(false);
         }
     };
 
-    // الضغط على إشعار - يوجه للصفحة المناسبة
+    // Click on notification - redirects to appropriate page
     const handleNotificationClick = async (notification: Notification) => {
-        // تحديث كمقروء
+        // Mark as read
         if (!notification.is_read) {
             await markNotificationAsRead(notification.id);
             setNotifications(prev =>
@@ -73,15 +73,15 @@ export default function Notifications() {
             );
         }
 
-        // التوجيه حسب نوع الإشعار
+        // Redirect based on notification type
         if (notification.type === 'match') {
-            // إشعار تطابق - يوجه لبلاغاتي لرؤية التفاصيل
+            // Match notification - redirects to my reports to see details
             navigate('/reports');
         } else if (notification.related_report_id) {
-            // إشعار مرتبط ببلاغ
+            // Notification related to a report
             navigate(`/reports/${notification.related_report_id}`);
         } else {
-            // إشعار عام
+            // General notification
             navigate('/reports');
         }
     };
@@ -100,7 +100,7 @@ export default function Notifications() {
                 <div className="flex items-center justify-center py-20">
                     <div className="text-center space-y-4">
                         <Loader2 className="h-10 w-10 animate-spin text-primary mx-auto" />
-                        <p className="text-muted-foreground">جاري تحميل الإشعارات...</p>
+                        <p className="text-muted-foreground">Loading notifications...</p>
                     </div>
                 </div>
             </Layout>
@@ -114,17 +114,17 @@ export default function Notifications() {
                 <div>
                     <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
                         <Bell className="h-8 w-8 text-primary" />
-                        الإشعارات
+                        Notifications
                     </h1>
                     <p className="text-muted-foreground mt-1">
-                        {unreadCount > 0 ? `لديك ${unreadCount} إشعار غير مقروء` : 'جميع الإشعارات مقروءة'}
+                        {unreadCount > 0 ? `You have ${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'All notifications read'}
                     </p>
                 </div>
 
                 {unreadCount > 0 && (
                     <Button variant="outline" onClick={handleMarkAllAsRead}>
-                        <CheckCheck className="h-4 w-4 ml-2" />
-                        تحديد الكل كمقروء
+                        <CheckCheck className="h-4 w-4 mr-2" />
+                        Mark all as read
                     </Button>
                 )}
             </div>
@@ -134,8 +134,8 @@ export default function Notifications() {
                 <Card className="border-0 shadow-xl">
                     <CardContent className="p-12 text-center">
                         <Bell className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold mb-2">لا توجد إشعارات</h3>
-                        <p className="text-muted-foreground">ستظهر الإشعارات هنا عند تأكيد تطابق لبلاغك</p>
+                        <h3 className="text-xl font-semibold mb-2">No notifications</h3>
+                        <p className="text-muted-foreground">Notifications will appear here when a match is confirmed for your report</p>
                     </CardContent>
                 </Card>
             ) : (
@@ -149,7 +149,7 @@ export default function Notifications() {
                                 key={notification.id}
                                 className={cn(
                                     "border-0 shadow-md transition-all duration-200 cursor-pointer hover:shadow-lg hover:scale-[1.01]",
-                                    !notification.is_read && "bg-primary/5 border-r-4 border-r-primary"
+                                    !notification.is_read && "bg-primary/5 border-l-4 border-l-primary"
                                 )}
                                 onClick={() => handleNotificationClick(notification)}
                             >
@@ -174,7 +174,7 @@ export default function Notifications() {
                                                 </h3>
                                                 <div className="flex items-center gap-2">
                                                     {!notification.is_read && (
-                                                        <Badge variant="default" className="text-xs">جديد</Badge>
+                                                        <Badge variant="default" className="text-xs">New</Badge>
                                                     )}
                                                     <ArrowLeft className="h-4 w-4 text-muted-foreground" />
                                                 </div>
@@ -184,7 +184,7 @@ export default function Notifications() {
                                             </p>
                                             <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
                                                 <Clock className="h-3 w-3" />
-                                                {new Date(notification.created_at).toLocaleDateString('ar-SA', {
+                                                {new Date(notification.created_at).toLocaleDateString('en-US', {
                                                     year: 'numeric',
                                                     month: 'short',
                                                     day: 'numeric',

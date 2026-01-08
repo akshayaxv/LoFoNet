@@ -66,21 +66,21 @@ export default function ReportDetails() {
                 setSelectedImage(data.images[0]);
             }
 
-            // إذا كان البلاغ متطابق، جلب معلومات الطرف الآخر
+            // If the report is matched, fetch information about the other party
             if (data?.status === 'matched') {
                 await loadMatchedReport(reportId, data.type);
             }
         } catch (error) {
-            console.error('خطأ في تحميل البلاغ:', error);
+            console.error('Error loading report:', error);
         } finally {
             setIsLoading(false);
         }
     };
 
-    // جلب معلومات البلاغ المتطابق
+    // Fetch matched report information
     const loadMatchedReport = async (reportId: string, type: string) => {
         try {
-            // البحث عن التطابق
+            // Search for the match
             const isLost = type === 'lost';
             const matchColumn = isLost ? 'lost_report_id' : 'found_report_id';
             const otherColumn = isLost ? 'found_report_id' : 'lost_report_id';
@@ -95,7 +95,7 @@ export default function ReportDetails() {
             if (matches.length > 0) {
                 const otherReportId = matches[0][otherColumn];
 
-                // جلب معلومات البلاغ الآخر مع معلومات المستخدم
+                // Fetch information about the other report with user details
                 const otherReports = await sql`
                     SELECT r.*, u.name as user_name, u.phone as user_phone, u.email as user_email,
                         ARRAY(SELECT image_url FROM report_images WHERE report_id = r.id) as images
@@ -109,15 +109,15 @@ export default function ReportDetails() {
                 }
             }
         } catch (error) {
-            console.error('خطأ في جلب معلومات التطابق:', error);
+            console.error('Error fetching match information:', error);
         }
     };
 
-    // مشاركة البلاغ
+    // Share report
     const handleShare = async () => {
         const shareData = {
-            title: `بلاغ ${report?.type === 'lost' ? 'مفقود' : 'موجود'}: ${report?.title}`,
-            text: `${report?.description}\n\nالمدينة: ${report?.location_city}`,
+            title: `${report?.type === 'lost' ? 'Lost' : 'Found'} Report: ${report?.title}`,
+            text: `${report?.description}\n\nCity: ${report?.location_city}`,
             url: window.location.href,
         };
 
@@ -126,21 +126,21 @@ export default function ReportDetails() {
                 await navigator.share(shareData);
             } else {
                 await navigator.clipboard.writeText(window.location.href);
-                toast.success('تم نسخ الرابط!');
+                toast.success('Link copied!');
             }
         } catch (error) {
-            console.error('خطأ في المشاركة:', error);
+            console.error('Error sharing:', error);
         }
     };
 
-    // فتح واتساب
+    // Open WhatsApp
     const openWhatsApp = (phone: string) => {
         const cleanPhone = phone.replace(/\D/g, '');
-        const message = `مرحباً، أتواصل معك بخصوص البلاغ: ${report?.title}`;
+        const message = `Hello, I'm contacting you regarding the report: ${report?.title}`;
         window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`, '_blank');
     };
 
-    // إجراء مكالمة
+    // Make call
     const makeCall = (phone: string) => {
         window.location.href = `tel:${phone}`;
     };
@@ -151,7 +151,7 @@ export default function ReportDetails() {
                 <div className="flex items-center justify-center py-20">
                     <div className="text-center space-y-4">
                         <Loader2 className="h-10 w-10 animate-spin text-primary mx-auto" />
-                        <p className="text-muted-foreground">جاري تحميل تفاصيل البلاغ...</p>
+                        <p className="text-muted-foreground">Loading report details...</p>
                     </div>
                 </div>
             </Layout>
@@ -163,11 +163,11 @@ export default function ReportDetails() {
             <Layout>
                 <div className="text-center py-20">
                     <AlertCircle className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold mb-2">البلاغ غير موجود</h3>
-                    <p className="text-muted-foreground mb-4">لم يتم العثور على البلاغ المطلوب</p>
+                    <h3 className="text-xl font-semibold mb-2">Report not found</h3>
+                    <p className="text-muted-foreground mb-4">The requested report was not found</p>
                     <Button variant="outline" onClick={() => navigate('/reports')}>
-                        <ArrowRight className="h-4 w-4 ml-2" />
-                        العودة للبلاغات
+                        <ArrowRight className="h-4 w-4 mr-2" />
+                        Back to reports
                     </Button>
                 </div>
             </Layout>
@@ -182,8 +182,8 @@ export default function ReportDetails() {
                 className="mb-4"
                 onClick={() => navigate(-1)}
             >
-                <ArrowRight className="h-4 w-4 ml-2" />
-                رجوع
+                <ArrowRight className="h-4 w-4 mr-2" />
+                Back
             </Button>
 
             <div className="grid lg:grid-cols-3 gap-6">
@@ -198,7 +198,7 @@ export default function ReportDetails() {
                                     <ImageWithFallback
                                         src={selectedImage}
                                         alt={report.title}
-                                        fallbackSrc="https://placehold.co/800x600/e2e8f0/94a3b8?text=لا+توجد+صورة"
+                                        fallbackSrc="https://placehold.co/800x600/e2e8f0/94a3b8?text=No+Image"
                                         className="w-full h-full object-contain"
                                     />
                                 ) : (
@@ -208,17 +208,16 @@ export default function ReportDetails() {
                                 )}
 
                                 {/* Type Badge */}
-                                <div className="absolute top-4 right-4">
+                                <div className="absolute top-4 left-4">
                                     <Badge
                                         variant={report.type === 'lost' ? 'destructive' : 'success'}
                                         className="text-sm px-3 py-1"
                                     >
-                                        {report.type === 'lost' ? 'مفقود' : 'موجود'}
+                                        {report.type === 'lost' ? 'Lost' : 'Found'}
                                     </Badge>
                                 </div>
                             </div>
 
-                            {/* Thumbnails */}
                             {/* Thumbnails */}
                             {report.images && report.images.length > 1 && (
                                 <div className="flex gap-2 p-4 overflow-x-auto">
@@ -235,7 +234,7 @@ export default function ReportDetails() {
                                         >
                                             <ImageWithFallback
                                                 src={img}
-                                                alt={`صورة ${idx + 1}`}
+                                                alt={`Image ${idx + 1}`}
                                                 className="w-full h-full object-cover"
                                             />
                                         </button>
@@ -277,7 +276,7 @@ export default function ReportDetails() {
                             <div>
                                 <h3 className="font-semibold mb-2 flex items-center gap-2">
                                     <FileText className="h-4 w-4 text-primary" />
-                                    الوصف
+                                    Description
                                 </h3>
                                 <p className="text-muted-foreground leading-relaxed">
                                     {report.description}
@@ -290,7 +289,7 @@ export default function ReportDetails() {
                                     <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                                         <Palette className="h-5 w-5 text-primary" />
                                         <div>
-                                            <p className="text-sm text-muted-foreground">اللون</p>
+                                            <p className="text-sm text-muted-foreground">Color</p>
                                             <p className="font-medium">{report.color}</p>
                                         </div>
                                     </div>
@@ -300,10 +299,10 @@ export default function ReportDetails() {
                                     <Calendar className="h-5 w-5 text-primary" />
                                     <div>
                                         <p className="text-sm text-muted-foreground">
-                                            {report.type === 'lost' ? 'تاريخ الفقدان' : 'تاريخ العثور'}
+                                            {report.type === 'lost' ? 'Date Lost' : 'Date Found'}
                                         </p>
                                         <p className="font-medium">
-                                            {new Date(report.date_occurred).toLocaleDateString('ar-SA')}
+                                            {new Date(report.date_occurred).toLocaleDateString('en-US')}
                                         </p>
                                     </div>
                                 </div>
@@ -311,7 +310,7 @@ export default function ReportDetails() {
                                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                                     <MapPin className="h-5 w-5 text-primary" />
                                     <div>
-                                        <p className="text-sm text-muted-foreground">المدينة</p>
+                                        <p className="text-sm text-muted-foreground">City</p>
                                         <p className="font-medium">{report.location_city}</p>
                                     </div>
                                 </div>
@@ -320,7 +319,7 @@ export default function ReportDetails() {
                                     <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                                         <MapPin className="h-5 w-5 text-primary" />
                                         <div>
-                                            <p className="text-sm text-muted-foreground">الموقع</p>
+                                            <p className="text-sm text-muted-foreground">Location</p>
                                             <p className="font-medium">{report.location_address}</p>
                                         </div>
                                     </div>
@@ -332,7 +331,7 @@ export default function ReportDetails() {
                                 <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
                                     <h3 className="font-semibold mb-2 flex items-center gap-2">
                                         <Sparkles className="h-4 w-4 text-primary" />
-                                        علامات مميزة
+                                        Distinguishing Marks
                                     </h3>
                                     <p className="text-muted-foreground">{report.distinguishing_marks}</p>
                                 </div>
@@ -342,7 +341,7 @@ export default function ReportDetails() {
                             <div className="flex items-center gap-4 text-sm text-muted-foreground pt-4 border-t">
                                 <div className="flex items-center gap-1">
                                     <Clock className="h-4 w-4" />
-                                    تم الإنشاء: {new Date(report.created_at).toLocaleDateString('ar-SA')}
+                                    Created: {new Date(report.created_at).toLocaleDateString('en-US')}
                                 </div>
                             </div>
                         </CardContent>
@@ -351,17 +350,17 @@ export default function ReportDetails() {
 
                 {/* Sidebar */}
                 <div className="space-y-6">
-                    {/* Matched Report Info - الأهم */}
+                    {/* Matched Report Info - Most Important */}
                     {report.status === 'matched' && matchedReport && (
                         <Card className="border-2 border-success shadow-xl bg-success/5">
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-lg flex items-center gap-2 text-success">
                                     <CheckCircle className="h-5 w-5" />
-                                    🎉 تم العثور على تطابق!
+                                    🎉 Match Found!
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                {/* صورة البلاغ المتطابق */}
+                                {/* Matched report image */}
                                 {matchedReport.images && matchedReport.images.length > 0 && (
                                     <img
                                         src={matchedReport.images[0]}
@@ -385,15 +384,15 @@ export default function ReportDetails() {
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Calendar className="h-4 w-4 text-muted-foreground" />
-                                        {new Date(matchedReport.date_occurred).toLocaleDateString('ar-SA')}
+                                        {new Date(matchedReport.date_occurred).toLocaleDateString('en-US')}
                                     </div>
                                 </div>
 
-                                {/* معلومات التواصل */}
+                                {/* Contact information */}
                                 <div className="pt-3 border-t">
                                     <h4 className="font-medium mb-2 flex items-center gap-2">
                                         <User className="h-4 w-4 text-primary" />
-                                        {report.type === 'lost' ? 'صاحب البلاغ الموجود' : 'صاحب البلاغ المفقود'}
+                                        {report.type === 'lost' ? 'Owner of Found Report' : 'Owner of Lost Report'}
                                     </h4>
                                     <p className="text-sm font-medium">{matchedReport.user_name}</p>
 
@@ -407,7 +406,7 @@ export default function ReportDetails() {
                                                     onClick={() => openWhatsApp(matchedReport.user_phone!)}
                                                 >
                                                     <MessageCircle className="h-4 w-4" />
-                                                    واتساب
+                                                    WhatsApp
                                                 </Button>
                                                 <Button
                                                     variant="outline"
@@ -416,7 +415,7 @@ export default function ReportDetails() {
                                                     onClick={() => makeCall(matchedReport.user_phone!)}
                                                 >
                                                     <Phone className="h-4 w-4" />
-                                                    اتصال
+                                                    Call
                                                 </Button>
                                             </>
                                         )}
@@ -438,13 +437,13 @@ export default function ReportDetails() {
                         </Card>
                     )}
 
-                    {/* Reporter Info - فقط للمستخدمين العاديين غير المتطابقين */}
+                    {/* Reporter Info - Only for regular non-matched users */}
                     {report.status !== 'matched' && (
                         <Card className="border-0 shadow-xl">
                             <CardHeader>
                                 <CardTitle className="text-lg flex items-center gap-2">
                                     <User className="h-5 w-5 text-primary" />
-                                    صاحب البلاغ
+                                    Report Owner
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
@@ -453,7 +452,7 @@ export default function ReportDetails() {
                                         {report.user_name?.charAt(0) || 'U'}
                                     </div>
                                     <div>
-                                        <p className="font-medium">{report.user_name || 'مستخدم'}</p>
+                                        <p className="font-medium">{report.user_name || 'User'}</p>
                                         <p className="text-sm text-muted-foreground">{report.user_email}</p>
                                     </div>
                                 </div>
@@ -468,9 +467,9 @@ export default function ReportDetails() {
                                 <div className="h-16 w-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
                                     <Loader2 className="h-8 w-8 text-primary animate-spin" />
                                 </div>
-                                <h3 className="font-bold text-lg mb-2">جاري البحث عن تطابق</h3>
+                                <h3 className="font-bold text-lg mb-2">Searching for Match</h3>
                                 <p className="text-sm text-muted-foreground">
-                                    يتم مقارنة بلاغك مع البلاغات الأخرى. سنرسل لك إشعاراً عند العثور على تطابق.
+                                    Your report is being compared with other reports. We'll send you a notification when a match is found.
                                 </p>
                             </CardContent>
                         </Card>

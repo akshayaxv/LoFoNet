@@ -34,31 +34,31 @@ export default function Register() {
 
     const validateForm = () => {
         if (!formData.name.trim()) {
-            toast.error('يرجى إدخال الاسم الكامل');
+            toast.error('Please enter your full name');
             return false;
         }
         if (!formData.email.trim()) {
-            toast.error('يرجى إدخال البريد الإلكتروني');
+            toast.error('Please enter your email');
             return false;
         }
         if (formData.phone && !validatePhone(formData.phone)) {
-            toast.error('رقم الهاتف غير صحيح');
+            toast.error('Invalid phone number');
             return false;
         }
         if (!formData.password) {
-            toast.error('يرجى إدخال كلمة المرور');
+            toast.error('Please enter a password');
             return false;
         }
         if (formData.password.length < 6) {
-            toast.error('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+            toast.error('Password must be at least 6 characters');
             return false;
         }
         if (formData.password !== formData.confirmPassword) {
-            toast.error('كلمة المرور غير متطابقة');
+            toast.error('Passwords do not match');
             return false;
         }
         if (!acceptTerms) {
-            toast.error('يجب الموافقة على شروط الاستخدام');
+            toast.error('You must accept the terms of use');
             return false;
         }
         return true;
@@ -80,15 +80,15 @@ export default function Register() {
             });
 
             if (result.success) {
-                toast.success('تم إنشاء الحساب بنجاح!', {
-                    description: 'مرحباً بك في نظام مُرشد',
+                toast.success('Account created successfully!', {
+                    description: 'Welcome to Murshid',
                 });
                 navigate('/');
             } else {
-                toast.error(result.error || 'فشل إنشاء الحساب');
+                toast.error(result.error || 'Failed to create account');
             }
         } catch (error) {
-            toast.error('حدث خطأ غير متوقع');
+            toast.error('An unexpected error occurred');
         } finally {
             setIsLoading(false);
         }
@@ -105,9 +105,9 @@ export default function Register() {
         if (/[0-9]/.test(password)) score++;
         if (/[^A-Za-z0-9]/.test(password)) score++;
 
-        if (score <= 2) return { level: 1, text: 'ضعيفة', color: 'bg-destructive' };
-        if (score <= 3) return { level: 2, text: 'متوسطة', color: 'bg-warning' };
-        return { level: 3, text: 'قوية', color: 'bg-success' };
+        if (score <= 2) return { level: 1, text: 'Weak', color: 'bg-destructive' };
+        if (score <= 3) return { level: 2, text: 'Medium', color: 'bg-warning' };
+        return { level: 3, text: 'Strong', color: 'bg-success' };
     };
 
     const strength = passwordStrength();
@@ -127,18 +127,18 @@ export default function Register() {
                         <div className="flex h-14 w-14 items-center justify-center rounded-2xl gradient-primary shadow-lg group-hover:shadow-xl transition-shadow">
                             <Search className="h-7 w-7 text-primary-foreground" />
                         </div>
-                        <div className="text-right">
-                            <h1 className="text-2xl font-bold text-foreground">مُرشد</h1>
-                            <p className="text-sm text-muted-foreground">نظام المفقودات الذكي</p>
+                        <div className="text-left">
+                            <h1 className="text-2xl font-bold text-foreground">Murshid</h1>
+                            <p className="text-sm text-muted-foreground">Smart Lost & Found System</p>
                         </div>
                     </Link>
                 </div>
 
                 <Card className="border-0 shadow-2xl bg-card/95 backdrop-blur">
                     <CardHeader className="text-center pb-2">
-                        <CardTitle className="text-2xl">إنشاء حساب جديد</CardTitle>
+                        <CardTitle className="text-2xl">Create New Account</CardTitle>
                         <CardDescription>
-                            أنشئ حسابك للاستفادة من خدمات نظام مُرشد
+                            Create your account to use Murshid services
                         </CardDescription>
                     </CardHeader>
 
@@ -148,13 +148,13 @@ export default function Register() {
                             <div className="space-y-2">
                                 <Label htmlFor="name" className="flex items-center gap-2 text-sm font-medium">
                                     <User className="h-4 w-4 text-primary" />
-                                    الاسم الكامل
+                                    Full Name
                                 </Label>
                                 <Input
                                     id="name"
                                     name="name"
                                     type="text"
-                                    placeholder="أحمد محمد"
+                                    placeholder="John Doe"
                                     value={formData.name}
                                     onChange={handleChange}
                                     className="h-12"
@@ -166,7 +166,7 @@ export default function Register() {
                             <div className="space-y-2">
                                 <Label htmlFor="email" className="flex items-center gap-2 text-sm font-medium">
                                     <Mail className="h-4 w-4 text-primary" />
-                                    البريد الإلكتروني
+                                    Email
                                 </Label>
                                 <Input
                                     id="email"
@@ -175,8 +175,7 @@ export default function Register() {
                                     placeholder="example@email.com"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className="h-12 text-right"
-                                    dir="ltr"
+                                    className="h-12"
                                     required
                                 />
                             </div>
@@ -185,19 +184,18 @@ export default function Register() {
                             <div className="space-y-2">
                                 <Label htmlFor="phone" className="flex items-center gap-2 text-sm font-medium">
                                     <Phone className="h-4 w-4 text-primary" />
-                                    رقم الجوال
-                                    <span className="text-xs text-muted-foreground">(اختياري)</span>
+                                    Phone Number
+                                    <span className="text-xs text-muted-foreground">(optional)</span>
                                 </Label>
                                 <div className="relative">
                                     <Input
                                         id="phone"
                                         name="phone"
                                         type="tel"
-                                        placeholder="+967 7xxxxxxxx"
+                                        placeholder="+1234567890"
                                         value={formData.phone}
                                         onChange={handleChange}
-                                        className="h-12 text-right"
-                                        dir="ltr"
+                                        className="h-12"
                                     />
                                 </div>
                             </div>
@@ -206,7 +204,7 @@ export default function Register() {
                             <div className="space-y-2">
                                 <Label htmlFor="password" className="flex items-center gap-2 text-sm font-medium">
                                     <Lock className="h-4 w-4 text-primary" />
-                                    كلمة المرور
+                                    Password
                                 </Label>
                                 <div className="relative">
                                     <Input
@@ -216,13 +214,13 @@ export default function Register() {
                                         placeholder="••••••••"
                                         value={formData.password}
                                         onChange={handleChange}
-                                        className="h-12 pl-12"
+                                        className="h-12 pr-12"
                                         required
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                                     >
                                         {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                     </button>
@@ -240,7 +238,7 @@ export default function Register() {
                                             ))}
                                         </div>
                                         <p className="text-xs text-muted-foreground">
-                                            قوة كلمة المرور: <span className="font-medium">{strength.text}</span>
+                                            Password strength: <span className="font-medium">{strength.text}</span>
                                         </p>
                                     </div>
                                 )}
@@ -250,7 +248,7 @@ export default function Register() {
                             <div className="space-y-2">
                                 <Label htmlFor="confirmPassword" className="flex items-center gap-2 text-sm font-medium">
                                     <Lock className="h-4 w-4 text-primary" />
-                                    تأكيد كلمة المرور
+                                    Confirm Password
                                 </Label>
                                 <div className="relative">
                                     <Input
@@ -260,11 +258,11 @@ export default function Register() {
                                         placeholder="••••••••"
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
-                                        className="h-12 pl-12"
+                                        className="h-12 pr-12"
                                         required
                                     />
                                     {formData.confirmPassword && formData.password === formData.confirmPassword && (
-                                        <CheckCircle2 className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-success" />
+                                        <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-success" />
                                     )}
                                 </div>
                             </div>
@@ -278,13 +276,13 @@ export default function Register() {
                                     className="mt-1"
                                 />
                                 <label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer">
-                                    أوافق على{' '}
+                                    I agree to the{' '}
                                     <Link to="/terms" className="text-primary hover:underline">
-                                        شروط الاستخدام
+                                        Terms of Use
                                     </Link>
-                                    {' '}و{' '}
+                                    {' '}and{' '}
                                     <Link to="/privacy" className="text-primary hover:underline">
-                                        سياسة الخصوصية
+                                        Privacy Policy
                                     </Link>
                                 </label>
                             </div>
@@ -300,11 +298,11 @@ export default function Register() {
                                 {isLoading ? (
                                     <>
                                         <Loader2 className="h-5 w-5 animate-spin" />
-                                        جاري إنشاء الحساب...
+                                        Creating account...
                                     </>
                                 ) : (
                                     <>
-                                        إنشاء الحساب
+                                        Create Account
                                         <ArrowRight className="h-5 w-5" />
                                     </>
                                 )}
@@ -314,9 +312,9 @@ export default function Register() {
                         {/* Login Link */}
                         <div className="text-center mt-6">
                             <p className="text-sm text-muted-foreground">
-                                لديك حساب بالفعل؟{' '}
+                                Already have an account?{' '}
                                 <Link to="/login" className="text-primary font-medium hover:underline">
-                                    سجل دخولك
+                                    Sign in
                                 </Link>
                             </p>
                         </div>
@@ -330,7 +328,7 @@ export default function Register() {
                         className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                         <ArrowRight className="h-4 w-4" />
-                        العودة للصفحة الرئيسية
+                        Back to home
                     </Link>
                 </div>
             </div>
