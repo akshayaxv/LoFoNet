@@ -19,12 +19,12 @@ import {
 } from 'lucide-react';
 
 const sidebarLinks = [
-    { href: '/admin', label: 'لوحة التحكم', icon: LayoutDashboard },
-    { href: '/admin/reports', label: 'إدارة البلاغات', icon: FileText },
-    { href: '/admin/users', label: 'إدارة المستخدمين', icon: Users },
-    { href: '/admin/matches', label: 'التطابقات', icon: GitCompare },
-    { href: '/admin/notifications', label: 'الإشعارات', icon: Bell },
-    { href: '/admin/settings', label: 'الإعدادات', icon: Settings },
+    { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/admin/reports', label: 'Reports Management', icon: FileText },
+    { href: '/admin/users', label: 'Users Management', icon: Users },
+    { href: '/admin/matches', label: 'Matches', icon: GitCompare },
+    { href: '/admin/notifications', label: 'Notifications', icon: Bell },
+    { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
 interface AdminLayoutProps {
@@ -59,8 +59,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                         </div>
                         {isSidebarOpen && (
                             <div>
-                                <h1 className="text-lg font-bold text-foreground">لوحة التحكم</h1>
-                                <p className="text-xs text-muted-foreground">نظام مُرشد</p>
+                                <h1 className="text-lg font-bold text-foreground">Dashboard</h1>
+                                <p className="text-xs text-muted-foreground">Murshid System</p>
                             </div>
                         )}
                     </Link>
@@ -117,7 +117,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                         className={cn("w-full mt-3 text-destructive hover:text-destructive hover:bg-destructive/10", !isSidebarOpen && "mt-2")}
                     >
                         <LogOut className="h-4 w-4" />
-                        {isSidebarOpen && <span className="mr-2">تسجيل الخروج</span>}
+                        {isSidebarOpen && <span className="mr-2">Logout</span>}
                     </Button>
                 </div>
             </aside>
@@ -137,7 +137,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                         <div className="flex h-9 w-9 items-center justify-center rounded-xl gradient-primary">
                             <Shield className="h-4 w-4 text-primary-foreground" />
                         </div>
-                        <span className="font-bold">لوحة التحكم</span>
+                        <span className="font-bold">Dashboard</span>
                     </Link>
 
                     <div className="w-10" /> {/* Spacer for centering */}
@@ -159,7 +159,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                 <div className="flex h-9 w-9 items-center justify-center rounded-xl gradient-primary">
                                     <Shield className="h-4 w-4 text-primary-foreground" />
                                 </div>
-                                <span className="font-bold">لوحة التحكم</span>
+                                <span className="font-bold">Dashboard</span>
                             </Link>
                             <Button
                                 variant="ghost"
@@ -200,7 +200,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                                 className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
                             >
                                 <LogOut className="h-4 w-4" />
-                                <span className="mr-2">تسجيل الخروج</span>
+                                <span className="mr-2">Logout</span>
                             </Button>
                         </div>
                     </aside>
