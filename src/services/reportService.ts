@@ -51,13 +51,13 @@ export interface ReportFilters {
 }
 
 /**
- * إنشاء بلاغ جديد مع تشغيل التطابق التلقائي
+ * Create new report with automatic matching
  */
 export async function createReport(data: CreateReportData, imageFiles?: File[]): Promise<{ success: boolean; report?: Report; matchesFound?: number; error?: string }> {
     try {
-        console.log('📝 إنشاء بلاغ جديد...');
+        console.log('📝 Creating new report...');
 
-        // إنشاء البلاغ
+        // Create report
         const reports = await sql`
       INSERT INTO reports (
         user_id, type, title, description, category, color,
@@ -74,11 +74,11 @@ export async function createReport(data: CreateReportData, imageFiles?: File[]):
     `;
 
         const report = reports[0] as Report;
-        console.log('✅ تم إنشاء البلاغ:', report.id);
+        console.log('✅ Report created:', report.id);
 
-        // رفع الصور إذا وجدت
+        // Upload images if found
         if (imageFiles && imageFiles.length > 0) {
-            console.log('📷 رفع الصور...');
+            console.log('📷 Uploading images...');
             const uploadResult = await uploadMultipleImages(imageFiles);
 
             for (const url of uploadResult.urls) {
@@ -89,34 +89,34 @@ export async function createReport(data: CreateReportData, imageFiles?: File[]):
             }
 
             report.images = uploadResult.urls;
-            console.log(`✅ تم رفع ${uploadResult.urls.length} صورة`);
+            console.log(`✅ ${uploadResult.urls.length} images uploaded`);
         }
 
-        // 🔍 تشغيل خوارزمية التطابق الذكي تلقائياً
-        console.log('🧠 تشغيل خوارزمية التطابق الذكي...');
+        // 🔍 Run smart matching algorithm automatically
+        console.log('🧠 Running smart matching algorithm...');
         const matchesFound = await runAutoMatchForReport(report.id);
-        console.log(`✅ تم العثور على ${matchesFound} تطابق محتمل`);
+        console.log(`✅ Found ${matchesFound} potential matches`);
 
         return { success: true, report, matchesFound };
     } catch (error) {
-        console.error('❌ خطأ في إنشاء البلاغ:', error);
+        console.error('❌ Error creating report:', error);
         return {
             success: false,
-            error: 'حدث خطأ أثناء إنشاء البلاغ',
+            error: 'An error occurred while creating the report',
         };
     }
 }
 
 /**
- * جلب البلاغات مع الفلترة
+ * Fetch reports with filtering
  */
 export async function getReports(filters: ReportFilters = {}): Promise<Report[]> {
     try {
-        console.log('🔄 جاري جلب البلاغات من قاعدة البيانات...');
+        console.log('🔄 Fetching reports from database...');
 
         let reports;
 
-        // إذا كان هناك فلتر للمستخدم
+        // If there's a user filter
         if (filters.userId) {
             reports = await sql`
                 SELECT r.*, u.name as user_name, u.email as user_email
@@ -127,7 +127,7 @@ export async function getReports(filters: ReportFilters = {}): Promise<Report[]>
                 LIMIT ${filters.limit || 50}
             `;
         }
-        // إذا كان هناك فلتر للنوع
+        // If there's a type filter
         else if (filters.type) {
             reports = await sql`
                 SELECT r.*, u.name as user_name, u.email as user_email
@@ -138,7 +138,7 @@ export async function getReports(filters: ReportFilters = {}): Promise<Report[]>
                 LIMIT ${filters.limit || 50}
             `;
         }
-        // إذا كان هناك فلتر للحالة
+        // If there's a status filter
         else if (filters.status) {
             reports = await sql`
                 SELECT r.*, u.name as user_name, u.email as user_email
@@ -149,7 +149,7 @@ export async function getReports(filters: ReportFilters = {}): Promise<Report[]>
                 LIMIT ${filters.limit || 50}
             `;
         }
-        // بدون فلترة - جلب الكل
+        // No filtering - fetch all
         else {
             reports = await sql`
                 SELECT r.*, u.name as user_name, u.email as user_email
@@ -160,9 +160,9 @@ export async function getReports(filters: ReportFilters = {}): Promise<Report[]>
             `;
         }
 
-        console.log(`✅ تم جلب ${reports.length} بلاغ`);
+        console.log(`✅ Fetched ${reports.length} reports`);
 
-        // جلب الصور لكل بلاغ
+        // Fetch images for each report
         for (const report of reports) {
             const images = await sql`
                 SELECT image_url FROM report_images WHERE report_id = ${report.id}
@@ -172,13 +172,13 @@ export async function getReports(filters: ReportFilters = {}): Promise<Report[]>
 
         return reports as Report[];
     } catch (error) {
-        console.error('❌ خطأ في جلب البلاغات:', error);
+        console.error('❌ Error fetching reports:', error);
         return [];
     }
 }
 
 /**
- * جلب بلاغ واحد بالتفصيل
+ * Fetch single report with details
  */
 export async function getReportById(id: string): Promise<Report | null> {
     try {
@@ -193,7 +193,7 @@ export async function getReportById(id: string): Promise<Report | null> {
 
         const report = reports[0] as Report;
 
-        // جلب الصور
+        // Fetch images
         const images = await sql`
       SELECT image_url FROM report_images WHERE report_id = ${id}
     `;
@@ -201,13 +201,13 @@ export async function getReportById(id: string): Promise<Report | null> {
 
         return report;
     } catch (error) {
-        console.error('خطأ في جلب البلاغ:', error);
+        console.error('Error fetching report:', error);
         return null;
     }
 }
 
 /**
- * تحديث حالة البلاغ
+ * Update report status
  */
 export async function updateReportStatus(id: string, status: string): Promise<boolean> {
     try {
@@ -217,26 +217,26 @@ export async function updateReportStatus(id: string, status: string): Promise<bo
     `;
         return true;
     } catch (error) {
-        console.error('خطأ في تحديث حالة البلاغ:', error);
+        console.error('Error updating report status:', error);
         return false;
     }
 }
 
 /**
- * حذف بلاغ
+ * Delete report
  */
 export async function deleteReport(id: string): Promise<boolean> {
     try {
         await sql`DELETE FROM reports WHERE id = ${id}`;
         return true;
     } catch (error) {
-        console.error('خطأ في حذف البلاغ:', error);
+        console.error('Error deleting report:', error);
         return false;
     }
 }
 
 /**
- * جلب عدد البلاغات
+ * Get reports count
  */
 export async function getReportsCount(filters: ReportFilters = {}): Promise<number> {
     try {
@@ -265,13 +265,13 @@ export async function getReportsCount(filters: ReportFilters = {}): Promise<numb
         const result = await (sql as any).unsafe(query, params);
         return Number(result[0].count);
     } catch (error) {
-        console.error('خطأ في جلب عدد البلاغات:', error);
+        console.error('Error fetching reports count:', error);
         return 0;
     }
 }
 
 /**
- * جلب بلاغات مستخدم معين
+ * Get reports for specific user
  */
 export async function getUserReports(userId: string): Promise<Report[]> {
     try {
@@ -281,7 +281,7 @@ export async function getUserReports(userId: string): Promise<Report[]> {
             ORDER BY created_at DESC
         `;
 
-        // جلب الصور لكل بلاغ
+        // Fetch images for each report
         const reportsWithImages = await Promise.all(result.map(async (report) => {
             const images = await sql`
                 SELECT image_url FROM report_images WHERE report_id = ${report.id}
@@ -294,7 +294,7 @@ export async function getUserReports(userId: string): Promise<Report[]> {
 
         return reportsWithImages;
     } catch (error) {
-        console.error('خطأ في جلب بلاغات المستخدم:', error);
+        console.error('Error fetching user reports:', error);
         return [];
     }
 }

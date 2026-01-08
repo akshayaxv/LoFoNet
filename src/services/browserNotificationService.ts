@@ -1,19 +1,19 @@
 /**
- * خدمة إشعارات المتصفح (Browser Notifications)
+ * Browser Notifications Service
  */
 
-// حالة صلاحية الإشعارات
+// Notification permission state
 export type NotificationPermission = 'granted' | 'denied' | 'default';
 
 /**
- * التحقق من دعم المتصفح للإشعارات
+ * Check if browser supports notifications
  */
 export function isNotificationSupported(): boolean {
     return 'Notification' in window;
 }
 
 /**
- * الحصول على حالة صلاحية الإشعارات الحالية
+ * Get current notification permission status
  */
 export function getNotificationPermission(): NotificationPermission {
     if (!isNotificationSupported()) return 'denied';
@@ -21,30 +21,30 @@ export function getNotificationPermission(): NotificationPermission {
 }
 
 /**
- * طلب صلاحية الإشعارات من المستخدم
+ * Request notification permission from user
  */
 export async function requestNotificationPermission(): Promise<NotificationPermission> {
     if (!isNotificationSupported()) {
-        console.warn('المتصفح لا يدعم الإشعارات');
+        console.warn('Browser does not support notifications');
         return 'denied';
     }
 
     try {
         const permission = await Notification.requestPermission();
-        console.log('📢 صلاحية الإشعارات:', permission);
+        console.log('📢 Notification permission:', permission);
 
-        // حفظ الحالة في localStorage
+        // Save state in localStorage
         localStorage.setItem('murshid_notification_permission', permission);
 
         return permission as NotificationPermission;
     } catch (error) {
-        console.error('خطأ في طلب صلاحية الإشعارات:', error);
+        console.error('Error requesting notification permission:', error);
         return 'denied';
     }
 }
 
 /**
- * إظهار إشعار في المتصفح
+ * Show notification in browser
  */
 export function showBrowserNotification(
     title: string,
@@ -62,8 +62,8 @@ export function showBrowserNotification(
         body: options?.body,
         icon: options?.icon || '/favicon.ico',
         tag: options?.tag,
-        dir: 'rtl',
-        lang: 'ar',
+        dir: 'ltr',
+        lang: 'en',
     });
 
     if (options?.onClick) {
@@ -74,37 +74,37 @@ export function showBrowserNotification(
         };
     }
 
-    // إغلاق تلقائي بعد 5 ثواني
+    // Auto-close after 5 seconds
     setTimeout(() => notification.close(), 5000);
 }
 
 /**
- * التحقق مما إذا كان المستخدم قد رفض الإشعارات سابقاً
+ * Check if user has previously denied notifications
  */
 export function hasUserDeniedNotifications(): boolean {
     return getNotificationPermission() === 'denied';
 }
 
 /**
- * التحقق مما إذا كان المستخدم قد قبل الإشعارات
+ * Check if user has accepted notifications
  */
 export function hasUserAcceptedNotifications(): boolean {
     return getNotificationPermission() === 'granted';
 }
 
 /**
- * التحقق مما إذا لم يُسأل المستخدم عن الإشعارات بعد
+ * Check if user has not been asked about notifications yet
  */
 export function shouldAskForNotifications(): boolean {
     return getNotificationPermission() === 'default';
 }
 
 /**
- * إظهار إشعار تطابق
+ * Show match notification
  */
 export function showMatchNotification(matchTitle: string): void {
-    showBrowserNotification('🎉 تطابق جديد!', {
-        body: `تم العثور على تطابق: ${matchTitle}`,
+    showBrowserNotification('🎉 New Match!', {
+        body: `A match was found: ${matchTitle}`,
         tag: 'match',
         onClick: () => {
             window.location.href = '/notifications';
@@ -113,11 +113,11 @@ export function showMatchNotification(matchTitle: string): void {
 }
 
 /**
- * إظهار إشعار تحديث حالة البلاغ
+ * Show report status update notification
  */
 export function showStatusUpdateNotification(reportTitle: string, newStatus: string): void {
-    showBrowserNotification('📋 تحديث البلاغ', {
-        body: `تم تحديث حالة "${reportTitle}" إلى: ${newStatus}`,
+    showBrowserNotification('📋 Report Update', {
+        body: `The status of "${reportTitle}" was updated to: ${newStatus}`,
         tag: 'status',
         onClick: () => {
             window.location.href = '/reports';

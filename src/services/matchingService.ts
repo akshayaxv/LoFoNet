@@ -48,32 +48,32 @@ export interface AIMatch {
 // ==================== Matching Algorithm Settings ====================
 
 const MATCH_SETTINGS = {
-    // أوزان الخوارزمية (المُحدثة)
-    TEXT_WEIGHT: 0.35,      // وزن تشابه النص والوصف والعلامات المميزة
-    LOCATION_WEIGHT: 0.25,  // وزن تشابه الموقع (GPS + المدينة)
-    TIME_WEIGHT: 0.15,      // وزن قرب التاريخ
-    IMAGE_WEIGHT: 0.25,     // وزن تشابه الصور
+    // Algorithm weights (updated)
+    TEXT_WEIGHT: 0.35,      // Weight for text, description, and distinguishing marks similarity
+    LOCATION_WEIGHT: 0.25,  // Weight for location similarity (GPS + city)
+    TIME_WEIGHT: 0.15,      // Weight for date proximity
+    IMAGE_WEIGHT: 0.25,     // Weight for image similarity
 
-    // العتبات
-    MIN_THRESHOLD: 0.40,    // الحد الأدنى للتطابق
-    HIGH_THRESHOLD: 0.70,   // تطابق عالي
+    // Thresholds
+    MIN_THRESHOLD: 0.40,    // Minimum threshold for matching
+    HIGH_THRESHOLD: 0.70,   // High match threshold
 
-    // إعدادات
-    MAX_DATE_DIFF_DAYS: 45, // أقصى فرق بالأيام
-    MAX_DISTANCE_KM: 50,    // أقصى مسافة بالكيلومتر للتطابق العالي
+    // Settings
+    MAX_DATE_DIFF_DAYS: 45, // Maximum difference in days
+    MAX_DISTANCE_KM: 50,    // Maximum distance in kilometers for high match
 };
 
 // ==================== Location Similarity with GPS ====================
 
 /**
- * حساب المسافة بين نقطتين باستخدام Haversine formula
- * @returns المسافة بالكيلومتر
+ * Calculate distance between two points using Haversine formula
+ * @returns Distance in kilometers
  */
 function calculateHaversineDistance(
     lat1: number, lng1: number,
     lat2: number, lng2: number
 ): number {
-    const R = 6371; // نصف قطر الأرض بالكيلومتر
+    const R = 6371; // Earth's radius in kilometers
 
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLng = (lng2 - lng1) * Math.PI / 180;
@@ -89,7 +89,7 @@ function calculateHaversineDistance(
 }
 
 /**
- * حساب تشابه الموقع (مع دعم GPS)
+ * Calculate location similarity (with GPS support)
  */
 function calculateLocationSimilarity(
     city1?: string, city2?: string,
@@ -97,38 +97,38 @@ function calculateLocationSimilarity(
     lat1?: number, lng1?: number,
     lat2?: number, lng2?: number
 ): number {
-    // إذا توفرت إحداثيات GPS
+    // If GPS coordinates are available
     if (lat1 && lng1 && lat2 && lng2) {
         const distance = calculateHaversineDistance(lat1, lng1, lat2, lng2);
 
-        if (distance <= 1) return 1.0;      // أقل من 1 كم = تطابق تام
-        if (distance <= 5) return 0.9;      // أقل من 5 كم = تطابق عالي جداً
-        if (distance <= 10) return 0.8;     // أقل من 10 كم = تطابق عالي
-        if (distance <= 20) return 0.6;     // أقل من 20 كم = تطابق متوسط
-        if (distance <= MATCH_SETTINGS.MAX_DISTANCE_KM) return 0.4; // أقل من 50 كم
+        if (distance <= 1) return 1.0;      // Less than 1 km = perfect match
+        if (distance <= 5) return 0.9;      // Less than 5 km = very high match
+        if (distance <= 10) return 0.8;     // Less than 10 km = high match
+        if (distance <= 20) return 0.6;     // Less than 20 km = medium match
+        if (distance <= MATCH_SETTINGS.MAX_DISTANCE_KM) return 0.4; // Less than 50 km
 
-        // أكثر من 50 كم = تطابق منخفض
+        // More than 50 km = low match
         return Math.max(0.1, 1 - (distance / 200));
     }
 
-    // إذا لم تتوفر GPS، نعتمد على المدينة والعنوان
+    // If GPS is not available, rely on city and address
     if (!city1 || !city2) return 0;
 
-    // تطابق تام للمدينة
+    // Perfect match for city
     if (city1 === city2) {
-        // إذا كان هناك عناوين، نقارنها أيضاً
+        // If there are addresses, compare them as well
         if (address1 && address2) {
             const addressSim = calculateTextSimilarity(address1, address2).overall;
-            return 0.7 + (addressSim * 0.3); // 70% للمدينة + 30% للعنوان
+            return 0.7 + (addressSim * 0.3); // 70% for city + 30% for address
         }
-        return 0.7; // نفس المدينة بدون عنوان
+        return 0.7; // Same city without address
     }
 
-    return 0.1; // مدن مختلفة
+    return 0.1; // Different cities
 }
 
 /**
- * حساب تشابه التاريخ
+ * Calculate date similarity
  */
 function calculateTimeSimilarity(date1: string, date2: string): number {
     const d1 = new Date(date1);
@@ -138,26 +138,26 @@ function calculateTimeSimilarity(date1: string, date2: string): number {
 
     if (diffDays > MATCH_SETTINGS.MAX_DATE_DIFF_DAYS) return 0;
 
-    // مكافأة للتواريخ القريبة جداً
-    if (diffDays <= 1) return 1.0;      // نفس اليوم أو يوم واحد
-    if (diffDays <= 3) return 0.95;     // 3 أيام
-    if (diffDays <= 7) return 0.85;     // أسبوع
-    if (diffDays <= 14) return 0.7;     // أسبوعين
+    // Bonus for very close dates
+    if (diffDays <= 1) return 1.0;      // Same day or one day
+    if (diffDays <= 3) return 0.95;     // 3 days
+    if (diffDays <= 7) return 0.85;     // One week
+    if (diffDays <= 14) return 0.7;     // Two weeks
 
-    // كلما كان الفرق أقل، كانت النتيجة أعلى
+    // The smaller the difference, the higher the score
     return Math.max(0.2, 1 - (diffDays / MATCH_SETTINGS.MAX_DATE_DIFF_DAYS));
 }
 
 // ==================== Main Matching Functions ====================
 
 /**
- * البحث عن تطابقات محتملة لبلاغ معين
+ * Search for potential matches for a given report
  */
 export async function findPotentialMatches(reportId: string): Promise<AIMatch[]> {
     try {
-        console.log('🔍 بدء البحث عن تطابقات للبلاغ:', reportId);
+        console.log('🔍 Starting search for matches for report:', reportId);
 
-        // جلب البلاغ الأصلي
+        // Fetch the original report
         const reports = await sql`
       SELECT r.*, 
         ARRAY(SELECT image_url FROM report_images WHERE report_id = r.id) as images
@@ -166,14 +166,14 @@ export async function findPotentialMatches(reportId: string): Promise<AIMatch[]>
     `;
 
         if (reports.length === 0) {
-            console.log('❌ البلاغ غير موجود');
+            console.log('❌ Report not found');
             return [];
         }
 
         const report = reports[0] as Report;
         const oppositeType = report.type === 'lost' ? 'found' : 'lost';
 
-        // جلب البلاغات المقابلة من نفس الفئة
+        // Fetch opposite reports from the same category
         const candidates = await sql`
       SELECT r.*, 
         ARRAY(SELECT image_url FROM report_images WHERE report_id = r.id) as images
@@ -185,12 +185,12 @@ export async function findPotentialMatches(reportId: string): Promise<AIMatch[]>
       LIMIT 50
     `;
 
-        console.log(`📋 تم العثور على ${candidates.length} بلاغ مرشح للمقارنة`);
+        console.log(`📋 Found ${candidates.length} candidate reports for comparison`);
 
         const matches: AIMatch[] = [];
 
         for (const candidate of candidates) {
-            // 1. حساب تشابه النص
+            // 1. Calculate text similarity
             const textScore = compareAttributes(
                 {
                     title: report.title,
@@ -208,13 +208,13 @@ export async function findPotentialMatches(reportId: string): Promise<AIMatch[]>
                 }
             );
 
-            // 2. حساب تشابه الصور (إذا وجدت)
+            // 2. Calculate image similarity (if found)
             let imageScore = 0;
             if (report.images?.length && candidate.images?.length) {
                 imageScore = await compareImageSets(report.images, candidate.images);
             }
 
-            // 3. حساب تشابه الموقع (مع GPS)
+            // 3. Calculate location similarity (with GPS)
             const locationScore = calculateLocationSimilarity(
                 report.location_city,
                 candidate.location_city,
@@ -226,20 +226,20 @@ export async function findPotentialMatches(reportId: string): Promise<AIMatch[]>
                 candidate.location_lng
             );
 
-            // 4. حساب تشابه التاريخ
+            // 4. Calculate date similarity
             const timeScore = calculateTimeSimilarity(
                 report.date_occurred,
                 candidate.date_occurred
             );
 
-            // 5. حساب الدرجة النهائية
+            // 5. Calculate final score
             const finalScore =
                 textScore * MATCH_SETTINGS.TEXT_WEIGHT +
                 imageScore * MATCH_SETTINGS.IMAGE_WEIGHT +
                 locationScore * MATCH_SETTINGS.LOCATION_WEIGHT +
                 timeScore * MATCH_SETTINGS.TIME_WEIGHT;
 
-            console.log(`📊 مقارنة مع ${candidate.title}:`, {
+            console.log(`📊 Comparison with ${candidate.title}:`, {
                 text: textScore.toFixed(2),
                 image: imageScore.toFixed(2),
                 location: locationScore.toFixed(2),
@@ -247,7 +247,7 @@ export async function findPotentialMatches(reportId: string): Promise<AIMatch[]>
                 final: finalScore.toFixed(2),
             });
 
-            // إضافة التطابق إذا تجاوز العتبة
+            // Add match if it exceeds threshold
             if (finalScore >= MATCH_SETTINGS.MIN_THRESHOLD) {
                 const match: AIMatch = {
                     id: crypto.randomUUID(),
@@ -265,23 +265,23 @@ export async function findPotentialMatches(reportId: string): Promise<AIMatch[]>
             }
         }
 
-        // ترتيب حسب الدرجة النهائية
+        // Sort by final score
         matches.sort((a, b) => b.final_score - a.final_score);
 
-        console.log(`✅ تم العثور على ${matches.length} تطابق محتمل`);
+        console.log(`✅ Found ${matches.length} potential matches`);
         return matches;
     } catch (error) {
-        console.error('❌ خطأ في البحث عن التطابقات:', error);
+        console.error('❌ Error searching for matches:', error);
         return [];
     }
 }
 
 /**
- * حفظ تطابق جديد في قاعدة البيانات وإرسال إشعار للأدمن
+ * Save new match to database and send notification to admin
  */
 export async function saveMatch(match: Omit<AIMatch, 'id' | 'created_at' | 'updated_at'>): Promise<AIMatch | null> {
     try {
-        // التحقق من عدم وجود تطابق سابق
+        // Check for existing match
         const existing = await sql`
       SELECT id FROM ai_matches 
       WHERE lost_report_id = ${match.lost_report_id} 
@@ -289,11 +289,11 @@ export async function saveMatch(match: Omit<AIMatch, 'id' | 'created_at' | 'upda
     `;
 
         if (existing.length > 0) {
-            console.log('⚠️ التطابق موجود مسبقاً');
+            console.log('⚠️ Match already exists');
             return null;
         }
 
-        // حفظ التطابق
+        // Save match
         const result = await sql`
       INSERT INTO ai_matches (
         lost_report_id, found_report_id, 
@@ -309,28 +309,28 @@ export async function saveMatch(match: Omit<AIMatch, 'id' | 'created_at' | 'upda
 
         const savedMatch = result[0] as AIMatch;
 
-        // جلب معلومات البلاغات لإرسال الإشعار
+        // Fetch report information to send notification
         const lostReport = await sql`SELECT title FROM reports WHERE id = ${match.lost_report_id}`;
         const foundReport = await sql`SELECT title FROM reports WHERE id = ${match.found_report_id}`;
 
-        // إرسال إشعار للمديرين
+        // Send notification to admins
         await notifyAdminsOfMatch(
             savedMatch.id,
-            lostReport[0]?.title || 'بلاغ مفقود',
-            foundReport[0]?.title || 'بلاغ موجود',
+            lostReport[0]?.title || 'Lost report',
+            foundReport[0]?.title || 'Found report',
             match.final_score
         );
 
-        console.log('✅ تم حفظ التطابق وإرسال إشعار للمديرين');
+        console.log('✅ Match saved and notification sent to admins');
         return savedMatch;
     } catch (error) {
-        console.error('❌ خطأ في حفظ التطابق:', error);
+        console.error('❌ Error saving match:', error);
         return null;
     }
 }
 
 /**
- * جلب جميع التطابقات مع تفاصيل البلاغات
+ * Get all matches with report details
  */
 export async function getMatchesWithDetails(status?: string): Promise<AIMatch[]> {
     try {
@@ -367,7 +367,7 @@ export async function getMatchesWithDetails(status?: string): Promise<AIMatch[]>
       `;
         }
 
-        // جلب صور كل بلاغ
+        // Fetch images for each report
         for (const match of matches) {
             const lostImages = await sql`
         SELECT image_url FROM report_images WHERE report_id = ${match.lost_report_id}
@@ -399,17 +399,17 @@ export async function getMatchesWithDetails(status?: string): Promise<AIMatch[]>
 
         return matches as AIMatch[];
     } catch (error) {
-        console.error('خطأ في جلب التطابقات:', error);
+        console.error('Error fetching matches:', error);
         return [];
     }
 }
 
 /**
- * تأكيد التطابق وإرسال إشعار للمستخدم
+ * Confirm match and send notification to user
  */
 export async function confirmMatch(matchId: string): Promise<boolean> {
     try {
-        // جلب معلومات التطابق
+        // Fetch match information
         const matchData = await sql`
       SELECT m.*, 
         lr.title as lost_title, lr.user_id as lost_user_id,
@@ -424,43 +424,43 @@ export async function confirmMatch(matchId: string): Promise<boolean> {
 
         const match = matchData[0];
 
-        // تحديث حالة التطابق
+        // Update match status
         await sql`
       UPDATE ai_matches 
       SET status = 'confirmed', updated_at = NOW()
       WHERE id = ${matchId}
     `;
 
-        // تحديث حالة البلاغات
+        // Update report statuses
         await sql`
       UPDATE reports SET status = 'matched', updated_at = NOW()
       WHERE id = ${match.lost_report_id} OR id = ${match.found_report_id}
     `;
 
-        // إرسال إشعار لصاحب بلاغ المفقود
+        // Send notification to lost report owner
         await notifyUserOfConfirmedMatch(
             match.lost_user_id,
             match.lost_title,
             match.found_title
         );
 
-        // إرسال إشعار لصاحب بلاغ الموجود
+        // Send notification to found report owner
         await notifyUserOfConfirmedMatch(
             match.found_user_id,
             match.found_title,
             match.lost_title
         );
 
-        console.log('✅ تم تأكيد التطابق وإرسال الإشعارات');
+        console.log('✅ Match confirmed and notifications sent');
         return true;
     } catch (error) {
-        console.error('❌ خطأ في تأكيد التطابق:', error);
+        console.error('❌ Error confirming match:', error);
         return false;
     }
 }
 
 /**
- * رفض التطابق
+ * Reject match
  */
 export async function rejectMatch(matchId: string): Promise<boolean> {
     try {
@@ -469,34 +469,34 @@ export async function rejectMatch(matchId: string): Promise<boolean> {
       SET status = 'rejected', updated_at = NOW()
       WHERE id = ${matchId}
     `;
-        console.log('✅ تم رفض التطابق');
+        console.log('✅ Match rejected');
         return true;
     } catch (error) {
-        console.error('❌ خطأ في رفض التطابق:', error);
+        console.error('❌ Error rejecting match:', error);
         return false;
     }
 }
 
 /**
- * تشغيل عملية التطابق التلقائي لبلاغ جديد
+ * Run automatic matching process for a new report
  */
 export async function runAutoMatchForReport(reportId: string): Promise<number> {
     try {
-        console.log('🚀 بدء التطابق التلقائي للبلاغ:', reportId);
+        console.log('🚀 Starting automatic matching for report:', reportId);
 
-        // البحث عن التطابقات
+        // Search for matches
         const matches = await findPotentialMatches(reportId);
 
         let savedCount = 0;
 
-        // حفظ التطابقات وإرسال الإشعارات
+        // Save matches and send notifications
         for (const match of matches) {
             const saved = await saveMatch(match);
             if (saved) savedCount++;
         }
 
-        // تحديث حالة البلاغ فقط بدون إشعار المستخدم
-        // (المستخدم سيتلقى إشعار فقط عند تأكيد التطابق من قبل الأدمن)
+        // Update report status only without notifying the user
+        // (User will only receive notification when match is confirmed by admin)
         if (savedCount > 0) {
             await sql`
         UPDATE reports SET status = 'processing', updated_at = NOW()
@@ -504,10 +504,10 @@ export async function runAutoMatchForReport(reportId: string): Promise<number> {
       `;
         }
 
-        console.log(`✅ تم العثور على ${savedCount} تطابق جديد`);
+        console.log(`✅ Found ${savedCount} new matches`);
         return savedCount;
     } catch (error) {
-        console.error('❌ خطأ في التطابق التلقائي:', error);
+        console.error('❌ Error in automatic matching:', error);
         return 0;
     }
 }

@@ -14,16 +14,16 @@ export interface UploadMultipleResult {
 }
 
 /**
- * رفع صورة واحدة إلى ImgBB
+ * Upload a single image to ImgBB
  */
 export async function uploadImage(file: File): Promise<UploadResult> {
     try {
         const formData = new FormData();
         formData.append('key', IMGBB_API_KEY);
 
-        // تحويل الملف إلى base64
+        // Convert file to base64
         const base64 = await fileToBase64(file);
-        formData.append('image', base64.split(',')[1]); // إزالة prefix الـ data URL
+        formData.append('image', base64.split(',')[1]); // Remove data URL prefix
 
         const response = await fetch(IMGBB_UPLOAD_URL, {
             method: 'POST',
@@ -40,20 +40,20 @@ export async function uploadImage(file: File): Promise<UploadResult> {
         } else {
             return {
                 success: false,
-                error: data.error?.message || 'فشل في رفع الصورة',
+                error: data.error?.message || 'Failed to upload image',
             };
         }
     } catch (error) {
-        console.error('خطأ في رفع الصورة:', error);
+        console.error('Error uploading image:', error);
         return {
             success: false,
-            error: error instanceof Error ? error.message : 'خطأ غير متوقع',
+            error: error instanceof Error ? error.message : 'Unexpected error',
         };
     }
 }
 
 /**
- * رفع عدة صور إلى ImgBB
+ * Upload multiple images to ImgBB
  */
 export async function uploadMultipleImages(files: File[]): Promise<UploadMultipleResult> {
     const urls: string[] = [];
@@ -64,7 +64,7 @@ export async function uploadMultipleImages(files: File[]): Promise<UploadMultipl
         if (result.success && result.url) {
             urls.push(result.url);
         } else {
-            errors.push(result.error || 'خطأ غير معروف');
+            errors.push(result.error || 'Unknown error');
         }
     }
 
@@ -76,7 +76,7 @@ export async function uploadMultipleImages(files: File[]): Promise<UploadMultipl
 }
 
 /**
- * تحويل ملف إلى Base64
+ * Convert file to Base64
  */
 function fileToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -88,7 +88,7 @@ function fileToBase64(file: File): Promise<string> {
 }
 
 /**
- * رفع صورة من URL
+ * Upload image from URL
  */
 export async function uploadImageFromUrl(imageUrl: string): Promise<UploadResult> {
     try {
@@ -111,14 +111,14 @@ export async function uploadImageFromUrl(imageUrl: string): Promise<UploadResult
         } else {
             return {
                 success: false,
-                error: data.error?.message || 'فشل في رفع الصورة',
+                error: data.error?.message || 'Failed to upload image',
             };
         }
     } catch (error) {
-        console.error('خطأ في رفع الصورة من URL:', error);
+        console.error('Error uploading image from URL:', error);
         return {
             success: false,
-            error: error instanceof Error ? error.message : 'خطأ غير متوقع',
+            error: error instanceof Error ? error.message : 'Unexpected error',
         };
     }
 }

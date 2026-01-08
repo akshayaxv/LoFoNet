@@ -33,11 +33,11 @@ export interface AuthResult {
 const SESSION_KEY = 'murshid_session';
 
 /**
- * تسجيل الدخول
+ * Login
  */
 export async function login(credentials: LoginCredentials): Promise<AuthResult> {
     try {
-        console.log('🔄 محاولة تسجيل الدخول...');
+        console.log('🔄 Attempting login...');
 
         const users = await sql`
       SELECT id, email, name, phone, avatar_url, role, is_active, created_at
@@ -45,12 +45,12 @@ export async function login(credentials: LoginCredentials): Promise<AuthResult> 
       WHERE email = ${credentials.email} AND password_hash = ${credentials.password}
     `;
 
-        console.log('نتيجة البحث:', users.length);
+        console.log('Search result:', users.length);
 
         if (users.length === 0) {
             return {
                 success: false,
-                error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
+                error: 'Incorrect email or password',
             };
         }
 
@@ -59,45 +59,45 @@ export async function login(credentials: LoginCredentials): Promise<AuthResult> 
         if (!user.is_active) {
             return {
                 success: false,
-                error: 'هذا الحساب معطل. يرجى التواصل مع الدعم الفني.',
+                error: 'This account is disabled. Please contact technical support.',
             };
         }
 
-        // إنشاء جلسة جديدة
+        // Create new session
         const token = generateToken();
-        const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 أيام
+        const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
         await sql`
       INSERT INTO user_sessions (user_id, token, expires_at)
       VALUES (${user.id}, ${token}, ${expiresAt.toISOString()})
     `;
 
-        // حفظ الجلسة في localStorage
+        // Save session in localStorage
         saveSession(token, user);
 
-        console.log('✅ تم تسجيل الدخول بنجاح');
+        console.log('✅ Login successful');
         return {
             success: true,
             user,
             token,
         };
     } catch (error) {
-        console.error('❌ خطأ في تسجيل الدخول:', error);
+        console.error('❌ Login error:', error);
         return {
             success: false,
-            error: 'حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى.',
+            error: 'An error occurred during login. Please try again.',
         };
     }
 }
 
 /**
- * إنشاء حساب جديد
+ * Create new account
  */
 export async function register(data: RegisterData): Promise<AuthResult> {
     try {
-        console.log('🔄 محاولة إنشاء حساب جديد...');
+        console.log('🔄 Attempting to create new account...');
 
-        // التحقق من عدم وجود حساب بنفس البريد
+        // Check if account with same email doesn't exist
         const existingUsers = await sql`
       SELECT id FROM users WHERE email = ${data.email}
     `;
@@ -105,11 +105,11 @@ export async function register(data: RegisterData): Promise<AuthResult> {
         if (existingUsers.length > 0) {
             return {
                 success: false,
-                error: 'يوجد حساب مسجل بهذا البريد الإلكتروني',
+                error: 'An account is already registered with this email',
             };
         }
 
-        // إنشاء المستخدم الجديد
+        // Create new user
         const newUsers = await sql`
       INSERT INTO users (email, password_hash, name, phone)
       VALUES (${data.email}, ${data.password}, ${data.name}, ${data.phone || null})
@@ -118,7 +118,7 @@ export async function register(data: RegisterData): Promise<AuthResult> {
 
         const user = newUsers[0] as User;
 
-        // إنشاء جلسة جديدة
+        // Create new session
         const token = generateToken();
         const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
@@ -129,23 +129,23 @@ export async function register(data: RegisterData): Promise<AuthResult> {
 
         saveSession(token, user);
 
-        console.log('✅ تم إنشاء الحساب بنجاح');
+        console.log('✅ Account created successfully');
         return {
             success: true,
             user,
             token,
         };
     } catch (error) {
-        console.error('❌ خطأ في إنشاء الحساب:', error);
+        console.error('❌ Account creation error:', error);
         return {
             success: false,
-            error: 'حدث خطأ أثناء إنشاء الحساب. يرجى المحاولة مرة أخرى.',
+            error: 'An error occurred while creating the account. Please try again.',
         };
     }
 }
 
 /**
- * تسجيل الخروج
+ * Logout
  */
 export async function logout(): Promise<void> {
     try {
@@ -156,14 +156,14 @@ export async function logout(): Promise<void> {
       `;
         }
     } catch (error) {
-        console.error('خطأ في تسجيل الخروج:', error);
+        console.error('Logout error:', error);
     } finally {
         clearSession();
     }
 }
 
 /**
- * التحقق من الجلسة الحالية
+ * Validate current session
  */
 export async function validateSession(): Promise<AuthResult> {
     try {
@@ -190,7 +190,7 @@ export async function validateSession(): Promise<AuthResult> {
             clearSession();
             return {
                 success: false,
-                error: 'هذا الحساب معطل',
+                error: 'This account is disabled',
             };
         }
 
@@ -200,13 +200,13 @@ export async function validateSession(): Promise<AuthResult> {
             token: session.token,
         };
     } catch (error) {
-        console.error('خطأ في التحقق من الجلسة:', error);
+        console.error('Session validation error:', error);
         return { success: false };
     }
 }
 
 /**
- * الحصول على المستخدم الحالي من الذاكرة المحلية
+ * Get current user from local storage
  */
 export function getCurrentUser(): User | null {
     const session = getSession();
@@ -214,7 +214,7 @@ export function getCurrentUser(): User | null {
 }
 
 /**
- * التحقق من صلاحيات الأدمن
+ * Check admin permissions
  */
 export function isAdmin(): boolean {
     const user = getCurrentUser();

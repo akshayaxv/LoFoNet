@@ -15,10 +15,10 @@ export interface Notification {
     user_email?: string;
 }
 
-// ==================== إنشاء الإشعارات ====================
+// ==================== Creating Notifications ====================
 
 /**
- * إنشاء إشعار جديد
+ * Create a new notification
  */
 export async function createNotification(data: {
     user_id: string;
@@ -34,20 +34,20 @@ export async function createNotification(data: {
       VALUES (${data.user_id}, ${data.title}, ${data.message}, ${data.type})
       RETURNING *
     `;
-        console.log('✅ تم إنشاء إشعار جديد');
+        console.log('✅ New notification created');
         return result[0] as Notification;
     } catch (error) {
-        console.error('❌ خطأ في إنشاء الإشعار:', error);
+        console.error('❌ Error creating notification:', error);
         return null;
     }
 }
 
 /**
- * إرسال إشعار تطابق محتمل للأدمن
+ * Send potential match notification to admin
  */
 export async function notifyAdminsOfMatch(matchId: string, lostReportTitle: string, foundReportTitle: string, score: number): Promise<void> {
     try {
-        // جلب جميع المديرين
+        // Fetch all admins
         const admins = await sql`
       SELECT id FROM users WHERE role = 'admin' OR role = 'moderator'
     `;
@@ -57,21 +57,21 @@ export async function notifyAdminsOfMatch(matchId: string, lostReportTitle: stri
         for (const admin of admins) {
             await createNotification({
                 user_id: admin.id,
-                title: '🔍 تطابق محتمل جديد!',
-                message: `تم اكتشاف تطابق بنسبة ${scorePercent}% بين "${lostReportTitle}" و "${foundReportTitle}". يرجى المراجعة واتخاذ إجراء.`,
+                title: '🔍 New Potential Match!',
+                message: `A match of ${scorePercent}% has been detected between "${lostReportTitle}" and "${foundReportTitle}". Please review and take action.`,
                 type: 'match',
                 related_match_id: matchId,
             });
         }
 
-        console.log(`✅ تم إرسال إشعار لـ ${admins.length} مدير`);
+        console.log(`✅ Notification sent to ${admins.length} admins`);
     } catch (error) {
-        console.error('❌ خطأ في إرسال إشعارات للمديرين:', error);
+        console.error('❌ Error sending notifications to admins:', error);
     }
 }
 
 /**
- * إرسال إشعار للمستخدم عند تأكيد التطابق
+ * Send notification to user when match is confirmed
  */
 export async function notifyUserOfConfirmedMatch(
     userId: string,
@@ -81,18 +81,18 @@ export async function notifyUserOfConfirmedMatch(
     try {
         await createNotification({
             user_id: userId,
-            title: '🎉 تم العثور على تطابق!',
-            message: `بشرى سارة! تم تأكيد تطابق بلاغك "${reportTitle}" مع "${matchedReportTitle}". يرجى التواصل لاستلام العنصر.`,
+            title: '🎉 Match Found!',
+            message: `Good news! Your report "${reportTitle}" has been matched with "${matchedReportTitle}". Please contact to retrieve the item.`,
             type: 'match',
         });
-        console.log('✅ تم إرسال إشعار للمستخدم');
+        console.log('✅ Notification sent to user');
     } catch (error) {
-        console.error('❌ خطأ في إرسال إشعار للمستخدم:', error);
+        console.error('❌ Error sending notification to user:', error);
     }
 }
 
 /**
- * إرسال إشعار تغيير حالة البلاغ
+ * Send report status change notification
  */
 export async function notifyUserOfStatusChange(
     userId: string,
@@ -100,29 +100,29 @@ export async function notifyUserOfStatusChange(
     newStatus: string
 ): Promise<void> {
     const statusMessages: Record<string, string> = {
-        pending: 'قيد الانتظار',
-        processing: 'جاري المعالجة والبحث عن تطابقات',
-        matched: 'تم العثور على تطابق!',
-        contacted: 'تم التواصل',
-        closed: 'تم إغلاق البلاغ',
+        pending: 'Pending',
+        processing: 'Processing and searching for matches',
+        matched: 'Match found!',
+        contacted: 'Contacted',
+        closed: 'Report closed',
     };
 
     try {
         await createNotification({
             user_id: userId,
-            title: '📋 تحديث حالة البلاغ',
-            message: `تم تحديث حالة بلاغك "${reportTitle}" إلى: ${statusMessages[newStatus] || newStatus}`,
+            title: '📋 Report Status Update',
+            message: `Your report "${reportTitle}" status has been updated to: ${statusMessages[newStatus] || newStatus}`,
             type: 'status',
         });
     } catch (error) {
-        console.error('❌ خطأ في إرسال إشعار تغيير الحالة:', error);
+        console.error('❌ Error sending status change notification:', error);
     }
 }
 
-// ==================== جلب الإشعارات ====================
+// ==================== Fetching Notifications ====================
 
 /**
- * جلب إشعارات المستخدم
+ * Get user notifications
  */
 export async function getUserNotifications(userId: string, limit = 20): Promise<Notification[]> {
     try {
@@ -134,13 +134,13 @@ export async function getUserNotifications(userId: string, limit = 20): Promise<
     `;
         return notifications as Notification[];
     } catch (error) {
-        console.error('خطأ في جلب الإشعارات:', error);
+        console.error('Error fetching notifications:', error);
         return [];
     }
 }
 
 /**
- * جلب عدد الإشعارات غير المقروءة
+ * Get unread notifications count
  */
 export async function getUnreadNotificationsCount(userId: string): Promise<number> {
     try {
@@ -150,13 +150,13 @@ export async function getUnreadNotificationsCount(userId: string): Promise<numbe
     `;
         return Number(result[0]?.count || 0);
     } catch (error) {
-        console.error('خطأ في جلب عدد الإشعارات:', error);
+        console.error('Error fetching notification count:', error);
         return 0;
     }
 }
 
 /**
- * جلب جميع الإشعارات (للأدمن)
+ * Get all notifications (for admin)
  */
 export async function getAllNotifications(limit = 50): Promise<Notification[]> {
     try {
@@ -169,15 +169,15 @@ export async function getAllNotifications(limit = 50): Promise<Notification[]> {
     `;
         return notifications as Notification[];
     } catch (error) {
-        console.error('خطأ في جلب الإشعارات:', error);
+        console.error('Error fetching notifications:', error);
         return [];
     }
 }
 
-// ==================== إدارة الإشعارات ====================
+// ==================== Managing Notifications ====================
 
 /**
- * تحديث حالة القراءة
+ * Update read status
  */
 export async function markNotificationAsRead(notificationId: string): Promise<boolean> {
     try {
@@ -187,13 +187,13 @@ export async function markNotificationAsRead(notificationId: string): Promise<bo
     `;
         return true;
     } catch (error) {
-        console.error('خطأ في تحديث الإشعار:', error);
+        console.error('Error updating notification:', error);
         return false;
     }
 }
 
 /**
- * تحديث جميع إشعارات المستخدم كمقروءة
+ * Mark all user notifications as read
  */
 export async function markAllNotificationsAsRead(userId: string): Promise<boolean> {
     try {
@@ -203,20 +203,20 @@ export async function markAllNotificationsAsRead(userId: string): Promise<boolea
     `;
         return true;
     } catch (error) {
-        console.error('خطأ في تحديث الإشعارات:', error);
+        console.error('Error updating notifications:', error);
         return false;
     }
 }
 
 /**
- * حذف إشعار
+ * Delete notification
  */
 export async function deleteNotification(notificationId: string): Promise<boolean> {
     try {
         await sql`DELETE FROM notifications WHERE id = ${notificationId}`;
         return true;
     } catch (error) {
-        console.error('خطأ في حذف الإشعار:', error);
+        console.error('Error deleting notification:', error);
         return false;
     }
 }
