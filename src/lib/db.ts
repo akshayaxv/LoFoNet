@@ -106,13 +106,13 @@ export async function initializeDatabase() {
 
         // Create default Admin account if it doesn't exist
         const adminExists = await sql`
-      SELECT id FROM users WHERE email = 'admin@murshid.com'
+      SELECT id FROM users WHERE email = 'admin@lofonet.com'
     `;
 
         if (adminExists.length === 0) {
             await sql`
         INSERT INTO users (email, password_hash, name, role)
-        VALUES ('admin@murshid.com', 'Admin123!@#', 'System Administrator', 'admin')
+        VALUES ('admin@lofonet.com', 'Admin123!@#', 'System Administrator', 'admin')
       `;
             console.log('✅ Default Admin account created');
         }

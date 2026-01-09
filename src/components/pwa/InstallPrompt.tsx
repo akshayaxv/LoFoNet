@@ -53,7 +53,7 @@ export function InstallPrompt() {
                                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                                     <Download className="h-4 w-4 text-primary" />
                                 </span>
-                                Install Murshid App
+                                Install LoFoNet App
                             </h3>
                             <p className="text-sm text-muted-foreground mb-3">
                                 Install the app for a better experience with instant notifications and faster performance.

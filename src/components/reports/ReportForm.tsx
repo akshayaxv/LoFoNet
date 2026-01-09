@@ -190,7 +190,7 @@ export function ReportForm() {
   };
 
   return (
-    <div className="max-w-xl mx-auto pb-20 md:pb-0">
+    <div className="max-w-xl mx-auto pb-20 md:pb-0" dir="ltr">
       <Card className="border-0 shadow-none md:border md:shadow-sm bg-transparent md:bg-card">
         <CardHeader className="text-center pb-2">
           <CardTitle className="text-2xl">Submit New Report</CardTitle>
@@ -204,8 +204,8 @@ export function ReportForm() {
           {showNotificationPrompt && (
             <Alert className="mb-6 border-primary/30 bg-primary/5">
               <Bell className="h-4 w-4 text-primary" />
-              <AlertDescription className="flex items-center justify-between">
-                <span>
+              <AlertDescription className="flex items-center justify-between text-left">
+                <span className="text-left">
                   Enable notifications to receive alerts when a match is found for your report
                 </span>
                 <Button
@@ -220,7 +220,7 @@ export function ReportForm() {
           )}
 
           {notificationsEnabled && (
-            <div className="mb-4 text-xs text-success flex items-center gap-1">
+            <div className="mb-4 text-xs text-success flex items-center gap-1 text-left">
               <CheckCircle className="h-3 w-3" />
               Notifications enabled - You'll receive alerts when a match is found
             </div>
@@ -254,10 +254,10 @@ export function ReportForm() {
             </Button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6" dir="ltr">
             {/* Title */}
             <div className="space-y-2">
-              <Label htmlFor="title" className="flex items-center gap-2">
+              <Label htmlFor="title" className="flex items-center gap-2 text-left">
                 <Tag className="h-4 w-4 text-primary" />
                 Report Title
               </Label>
@@ -266,18 +266,20 @@ export function ReportForm() {
                 placeholder="Example: iPhone 14 Pro"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                className="text-left"
+                style={{ textAlign: 'left', direction: 'ltr' }}
                 required
               />
             </div>
 
             {/* Category */}
             <div className="space-y-2">
-              <Label className="flex items-center gap-2">
+              <Label className="flex items-center gap-2 text-left">
                 <FileText className="h-4 w-4 text-primary" />
                 Item Type
               </Label>
               <Select value={category} onValueChange={(v) => setCategory(v as ItemCategory)}>
-                <SelectTrigger>
+                <SelectTrigger className="text-left">
                   <SelectValue placeholder="Select item type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -292,7 +294,7 @@ export function ReportForm() {
 
             {/* Color */}
             <div className="space-y-2">
-              <Label htmlFor="color" className="flex items-center gap-2">
+              <Label htmlFor="color" className="flex items-center gap-2 text-left">
                 <Palette className="h-4 w-4 text-primary" />
                 Color
               </Label>
@@ -301,12 +303,14 @@ export function ReportForm() {
                 placeholder="Example: Dark blue"
                 value={color}
                 onChange={(e) => setColor(e.target.value)}
+                className="text-left"
+                style={{ textAlign: 'left', direction: 'ltr' }}
               />
             </div>
 
             {/* Description */}
             <div className="space-y-2">
-              <Label htmlFor="description" className="flex items-center gap-2">
+              <Label htmlFor="description" className="flex items-center gap-2 text-left">
                 <FileText className="h-4 w-4 text-primary" />
                 Detailed Description
               </Label>
@@ -315,14 +319,15 @@ export function ReportForm() {
                 placeholder="Write a detailed description of the item including distinguishing marks and condition..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                className="min-h-[120px] resize-none text-left"
+                style={{ textAlign: 'left', direction: 'ltr' }}
                 required
-                className="min-h-[120px] resize-none"
               />
             </div>
 
             {/* Distinguishing Marks */}
             <div className="space-y-2">
-              <Label htmlFor="marks" className="flex items-center gap-2">
+              <Label htmlFor="marks" className="flex items-center gap-2 text-left">
                 <Sparkles className="h-4 w-4 text-primary" />
                 Distinguishing Marks
                 <span className="text-xs text-muted-foreground">(optional)</span>
@@ -332,12 +337,14 @@ export function ReportForm() {
                 placeholder="Example: Small scratch on corner"
                 value={distinguishingMarks}
                 onChange={(e) => setDistinguishingMarks(e.target.value)}
+                className="text-left"
+                style={{ textAlign: 'left', direction: 'ltr' }}
               />
             </div>
 
             {/* Images */}
             <div className="space-y-2">
-              <Label className="flex items-center gap-2">
+              <Label className="flex items-center gap-2 text-left">
                 <Upload className="h-4 w-4 text-primary" />
                 Images (up to 5 images)
               </Label>
@@ -387,12 +394,12 @@ export function ReportForm() {
 
             {/* City */}
             <div className="space-y-2">
-              <Label className="flex items-center gap-2">
+              <Label className="flex items-center gap-2 text-left">
                 <Building2 className="h-4 w-4 text-primary" />
                 City
               </Label>
               <Select value={locationCity} onValueChange={setLocationCity}>
-                <SelectTrigger>
+                <SelectTrigger className="text-left">
                   <SelectValue placeholder="Select city" />
                 </SelectTrigger>
                 <SelectContent>
@@ -407,7 +414,7 @@ export function ReportForm() {
 
             {/* Location */}
             <div className="space-y-2">
-              <Label htmlFor="location" className="flex items-center justify-between">
+              <Label htmlFor="location" className="flex items-center justify-between text-left">
                 <span className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-primary" />
                   Approximate Location
@@ -428,12 +435,14 @@ export function ReportForm() {
                 placeholder="Example: Main Street, near University"
                 value={locationAddress}
                 onChange={(e) => setLocationAddress(e.target.value)}
+                className="text-left"
+                style={{ textAlign: 'left', direction: 'ltr' }}
                 required
               />
 
               {/* GPS Indicator */}
               {locationLat && locationLng && (
-                <div className="text-xs text-success flex items-center gap-1">
+                <div className="text-xs text-success flex items-center gap-1 text-left">
                   <CheckCircle className="h-3 w-3" />
                   Location selected: {locationLat.toFixed(4)}, {locationLng.toFixed(4)}
                 </div>
@@ -457,7 +466,7 @@ export function ReportForm() {
 
             {/* Date */}
             <div className="space-y-2">
-              <Label htmlFor="date" className="flex items-center gap-2">
+              <Label htmlFor="date" className="flex items-center gap-2 text-left">
                 <Calendar className="h-4 w-4 text-primary" />
                 {reportType === 'lost' ? 'Date Lost' : 'Date Found'}
               </Label>
@@ -466,6 +475,8 @@ export function ReportForm() {
                 type="date"
                 value={dateOccurred}
                 onChange={(e) => setDateOccurred(e.target.value)}
+                className="text-left"
+                style={{ textAlign: 'left', direction: 'ltr' }}
                 required
               />
             </div>
@@ -473,11 +484,11 @@ export function ReportForm() {
             {/* AI Notice */}
             <div className="p-4 bg-primary/5 rounded-xl border border-primary/20 flex items-start gap-3">
               <Sparkles className="h-5 w-5 text-primary mt-0.5" />
-              <div>
-                <p className="text-sm font-medium text-foreground">
+              <div className="text-left">
+                <p className="text-sm font-medium text-foreground text-left">
                   AI Analysis
                 </p>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-muted-foreground mt-1 text-left">
                   Your report will be automatically analyzed and compared with other reports to find potential matches
                 </p>
               </div>
@@ -493,12 +504,12 @@ export function ReportForm() {
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Loader2 className="h-5 w-5 animate-spin mr-2" />
                   Submitting Report...
                 </>
               ) : (
                 <>
-                  <CheckCircle className="h-5 w-5" />
+                  <CheckCircle className="h-5 w-5 mr-2" />
                   Submit Report
                 </>
               )}

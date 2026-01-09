@@ -69,7 +69,7 @@ export function Header() {
             <Search className="h-5 w-5 text-primary-foreground" />
           </div>
           <div className="block">
-            <h1 className="text-lg font-bold text-foreground">Murshid</h1>
+            <h1 className="text-lg font-bold text-foreground">LoFoNet</h1>
             <p className="text-xs text-muted-foreground hidden sm:block">Smart Lost & Found System</p>
           </div>
         </Link>

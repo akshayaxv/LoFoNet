@@ -80,7 +80,7 @@ export default function AdminDashboard() {
             {/* Header */}
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-                <p className="text-muted-foreground mt-1">Welcome to Murshid Management System</p>
+                <p className="text-muted-foreground mt-1">Welcome to LoFoNet Management System</p>
             </div>
 
             {/* Stats Grid */}

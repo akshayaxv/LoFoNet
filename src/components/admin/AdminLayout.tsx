@@ -60,7 +60,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                         {isSidebarOpen && (
                             <div>
                                 <h1 className="text-lg font-bold text-foreground">Dashboard</h1>
-                                <p className="text-xs text-muted-foreground">Murshid System</p>
+                                <p className="text-xs text-muted-foreground">LoFoNet System</p>
                             </div>
                         )}
                     </Link>

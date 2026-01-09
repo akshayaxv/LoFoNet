@@ -15,7 +15,7 @@ export function Layout({ children }: LayoutProps) {
       </main>
       <footer className="border-t py-8 mt-auto hidden md:block">
         <div className="container text-center text-sm text-muted-foreground">
-          <p>© 2024 Murshid Lost & Found System. All rights reserved.</p>
+          <p>LoFoNet - Lost & Found System. All rights reserved.</p>
           <p className="mt-1">Powered by Artificial Intelligence</p>
         </div>
       </footer>

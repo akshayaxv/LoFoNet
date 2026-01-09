@@ -81,7 +81,7 @@ export default function Register() {
 
             if (result.success) {
                 toast.success('Account created successfully!', {
-                    description: 'Welcome to Murshid',
+                    description: 'Welcome to LoFoNet',
                 });
                 navigate('/');
             } else {
@@ -113,7 +113,7 @@ export default function Register() {
     const strength = passwordStrength();
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4 py-10">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4 py-10" dir="ltr">
             {/* Background Pattern */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-20 right-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
@@ -128,7 +128,7 @@ export default function Register() {
                             <Search className="h-7 w-7 text-primary-foreground" />
                         </div>
                         <div className="text-left">
-                            <h1 className="text-2xl font-bold text-foreground">Murshid</h1>
+                            <h1 className="text-2xl font-bold text-foreground">LoFoNet</h1>
                             <p className="text-sm text-muted-foreground">Smart Lost & Found System</p>
                         </div>
                     </Link>
@@ -138,15 +138,15 @@ export default function Register() {
                     <CardHeader className="text-center pb-2">
                         <CardTitle className="text-2xl">Create New Account</CardTitle>
                         <CardDescription>
-                            Create your account to use Murshid services
+                            Create your account to use LoFoNet services
                         </CardDescription>
                     </CardHeader>
 
                     <CardContent className="pt-6">
-                        <form onSubmit={handleSubmit} className="space-y-4">
+                        <form onSubmit={handleSubmit} className="space-y-4" dir="ltr">
                             {/* Name */}
                             <div className="space-y-2">
-                                <Label htmlFor="name" className="flex items-center gap-2 text-sm font-medium">
+                                <Label htmlFor="name" className="flex items-center gap-2 text-sm font-medium text-left">
                                     <User className="h-4 w-4 text-primary" />
                                     Full Name
                                 </Label>
@@ -158,14 +158,14 @@ export default function Register() {
                                     value={formData.name}
                                     onChange={handleChange}
                                     className="h-12 text-left"
-                                    dir="ltr"
+                                    style={{ textAlign: 'left', direction: 'ltr' }}
                                     required
                                 />
                             </div>
 
                             {/* Email */}
                             <div className="space-y-2">
-                                <Label htmlFor="email" className="flex items-center gap-2 text-sm font-medium">
+                                <Label htmlFor="email" className="flex items-center gap-2 text-sm font-medium text-left">
                                     <Mail className="h-4 w-4 text-primary" />
                                     Email
                                 </Label>
@@ -177,14 +177,14 @@ export default function Register() {
                                     value={formData.email}
                                     onChange={handleChange}
                                     className="h-12 text-left"
-                                    dir="ltr"
+                                    style={{ textAlign: 'left', direction: 'ltr' }}
                                     required
                                 />
                             </div>
 
                             {/* Phone */}
                             <div className="space-y-2">
-                                <Label htmlFor="phone" className="flex items-center gap-2 text-sm font-medium">
+                                <Label htmlFor="phone" className="flex items-center gap-2 text-sm font-medium text-left">
                                     <Phone className="h-4 w-4 text-primary" />
                                     Phone Number
                                     <span className="text-xs text-muted-foreground">(optional)</span>
@@ -198,14 +198,14 @@ export default function Register() {
                                         value={formData.phone}
                                         onChange={handleChange}
                                         className="h-12 text-left"
-                                        dir="ltr"
+                                        style={{ textAlign: 'left', direction: 'ltr' }}
                                     />
                                 </div>
                             </div>
 
                             {/* Password */}
                             <div className="space-y-2">
-                                <Label htmlFor="password" className="flex items-center gap-2 text-sm font-medium">
+                                <Label htmlFor="password" className="flex items-center gap-2 text-sm font-medium text-left">
                                     <Lock className="h-4 w-4 text-primary" />
                                     Password
                                 </Label>
@@ -218,7 +218,7 @@ export default function Register() {
                                         value={formData.password}
                                         onChange={handleChange}
                                         className="h-12 pr-12 text-left"
-                                        dir="ltr"
+                                        style={{ textAlign: 'left', direction: 'ltr' }}
                                         required
                                     />
                                     <button
@@ -241,7 +241,7 @@ export default function Register() {
                                                 />
                                             ))}
                                         </div>
-                                        <p className="text-xs text-muted-foreground">
+                                        <p className="text-xs text-muted-foreground text-left">
                                             Password strength: <span className="font-medium">{strength.text}</span>
                                         </p>
                                     </div>
@@ -250,7 +250,7 @@ export default function Register() {
 
                             {/* Confirm Password */}
                             <div className="space-y-2">
-                                <Label htmlFor="confirmPassword" className="flex items-center gap-2 text-sm font-medium">
+                                <Label htmlFor="confirmPassword" className="flex items-center gap-2 text-sm font-medium text-left">
                                     <Lock className="h-4 w-4 text-primary" />
                                     Confirm Password
                                 </Label>
@@ -263,7 +263,7 @@ export default function Register() {
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
                                         className="h-12 pr-12 text-left"
-                                        dir="ltr"
+                                        style={{ textAlign: 'left', direction: 'ltr' }}
                                         required
                                     />
                                     {formData.confirmPassword && formData.password === formData.confirmPassword && (
@@ -273,14 +273,14 @@ export default function Register() {
                             </div>
 
                             {/* Terms */}
-                            <div className="flex items-start gap-3 pt-2">
+                            <div className="flex items-start gap-3 pt-2 text-left">
                                 <Checkbox
                                     id="terms"
                                     checked={acceptTerms}
                                     onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
                                     className="mt-1"
                                 />
-                                <label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer">
+                                <label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer text-left">
                                     I agree to the{' '}
                                     <Link to="/terms" className="text-primary hover:underline">
                                         Terms of Use
@@ -332,7 +332,7 @@ export default function Register() {
                         to="/"
                         className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
-                        <ArrowRight className="h-4 w-4" />
+                        <ArrowRight className="h-4 w-4 rotate-180" />
                         Back to home
                     </Link>
                 </div>

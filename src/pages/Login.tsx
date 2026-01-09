@@ -49,7 +49,7 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4" dir="ltr">
             {/* Background Pattern */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-20 right-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
@@ -64,7 +64,7 @@ export default function Login() {
                             <Search className="h-7 w-7 text-primary-foreground" />
                         </div>
                         <div className="text-left">
-                            <h1 className="text-2xl font-bold text-foreground">Murshid</h1>
+                            <h1 className="text-2xl font-bold text-foreground">LoFoNet</h1>
                             <p className="text-sm text-muted-foreground">Smart Lost & Found System</p>
                         </div>
                     </Link>
@@ -79,10 +79,10 @@ export default function Login() {
                     </CardHeader>
 
                     <CardContent className="pt-6">
-                        <form onSubmit={handleSubmit} className="space-y-5">
+                        <form onSubmit={handleSubmit} className="space-y-5" dir="ltr">
                             {/* Email */}
                             <div className="space-y-2">
-                                <Label htmlFor="email" className="flex items-center gap-2 text-sm font-medium">
+                                <Label htmlFor="email" className="flex items-center gap-2 text-sm font-medium text-left">
                                     <Mail className="h-4 w-4 text-primary" />
                                     Email
                                 </Label>
@@ -93,14 +93,14 @@ export default function Login() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="h-12 text-left"
-                                    dir="ltr"
+                                    style={{ textAlign: 'left', direction: 'ltr' }}
                                     required
                                 />
                             </div>
 
                             {/* Password */}
                             <div className="space-y-2">
-                                <Label htmlFor="password" className="flex items-center gap-2 text-sm font-medium">
+                                <Label htmlFor="password" className="flex items-center gap-2 text-sm font-medium text-left">
                                     <Lock className="h-4 w-4 text-primary" />
                                     Password
                                 </Label>
@@ -112,7 +112,7 @@ export default function Login() {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         className="h-12 pr-12 text-left"
-                                        dir="ltr"
+                                        style={{ textAlign: 'left', direction: 'ltr' }}
                                         required
                                     />
                                     <button
@@ -187,7 +187,7 @@ export default function Login() {
                         to="/"
                         className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
-                        <ArrowRight className="h-4 w-4" />
+                        <ArrowRight className="h-4 w-4 rotate-180" />
                         Back to home
                     </Link>
                 </div>
