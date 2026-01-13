@@ -161,48 +161,122 @@ After seeding the database:
 ## 📁 Project Structure
 
 ```
-lofonet/
-├── src/
-│   ├── components/          # Reusable UI components
-│   │   ├── ui/             # Base UI components (buttons, inputs, etc.)
-│   │   ├── layout/         # Layout components (header, footer, etc.)
-│   │   └── features/       # Feature-specific components
-│   ├── contexts/           # React Context providers
-│   │   ├── AuthContext.tsx
-│   │   └── NotificationContext.tsx
-│   ├── hooks/              # Custom React hooks
-│   │   ├── useAuth.ts
-│   │   ├── useGeolocation.ts
-│   │   └── useMatching.ts
-│   ├── pages/              # Application pages/routes
+LOFONET
+├── backend
+│   └── routes
+│       └── matches.js
+│
+├── database
+│   └── schema.sql
+│
+├── public
+│   ├── banner.png
+│   ├── geo-spatial.svg
+│   ├── icon.svg
+│   ├── system-architecture.svg
+│   └── vf_asset_flow.svg
+│
+├── src
+│   ├── app
+│   │   ├── App.tsx
+│   │   ├── App.css
+│   │   ├── main.tsx
+│   │   └── index.css
+│   │
+│   ├── components
+│   │   ├── admin
+│   │   │   └── AdminLayout.tsx
+│   │   │
+│   │   ├── auth
+│   │   │   └── ProtectedRoute.tsx
+│   │   │
+│   │   ├── home
+│   │   │   ├── AIMatchDemo.tsx
+│   │   │   ├── HeroSection.tsx
+│   │   │   ├── HowItWorks.tsx
+│   │   │   ├── RecentReports.tsx
+│   │   │   └── StatsCard.tsx
+│   │   │
+│   │   ├── layout
+│   │   │   ├── Header.tsx
+│   │   │   ├── BottomNavigation.tsx
+│   │   │   └── Layout.tsx
+│   │   │
+│   │   ├── reports
+│   │   │   ├── LocationPicker.tsx
+│   │   │   ├── ReportForm.tsx
+│   │   │   └── ReportsList.tsx
+│   │   │
+│   │   └── ui
+│   │       └── NavLink.tsx
+│   │
+│   ├── pages
+│   │   ├── admin
+│   │   │   ├── AdminDashboard.tsx
+│   │   │   ├── AdminMatches.tsx
+│   │   │   ├── AdminNotifications.tsx
+│   │   │   ├── AdminReports.tsx
+│   │   │   ├── AdminSettings.tsx
+│   │   │   └── AdminUsers.tsx
+│   │   │
 │   │   ├── Home.tsx
-│   │   ├── ReportLost.tsx
-│   │   ├── ReportFound.tsx
-│   │   ├── Dashboard.tsx
-│   │   └── Admin.tsx
-│   ├── services/           # API integration layer
-│   │   ├── api.ts
-│   │   ├── auth.service.ts
-│   │   └── items.service.ts
-│   ├── types/              # TypeScript type definitions
+│   │   ├── Login.tsx
+│   │   ├── Register.tsx
+│   │   ├── Profile.tsx
+│   │   ├── Reports.tsx
+│   │   ├── ReportDetails.tsx
+│   │   ├── NewReport.tsx
+│   │   ├── Notifications.tsx
+│   │   └── NotFound.tsx
+│   │
+│   ├── context
+│   │   └── AuthContext.tsx
+│   │
+│   ├── providers
+│   │   └── theme-provider.tsx
+│   │
+│   ├── hooks
+│   │   ├── use-mobile.tsx
+│   │   └── use-toast.ts
+│   │
+│   ├── services
+│   │   ├── authService.ts
+│   │   ├── reportService.ts
+│   │   ├── imageService.ts
+│   │   ├── matchingService.ts
+│   │   ├── notificationService.ts
+│   │   └── browserNotification.ts
+│   │
+│   ├── lib
+│   │   ├── db.ts
+│   │   ├── utils.ts
+│   │   ├── imageSimilarity.ts
+│   │   └── textSimilarity.ts
+│   │
+│   ├── data
+│   │   └── mockData.ts
+│   │
+│   ├── types
 │   │   └── index.ts
-│   ├── utils/              # Utility functions
-│   │   ├── matching.ts
-│   │   ├── geospatial.ts
-│   │   └── validators.ts
-│   ├── App.tsx             # Root component
-│   └── main.tsx            # Application entry point
-├── database/
-│   ├── schema.sql          # Database schema
-│   └── seed.sql            # Sample data
-├── public/                 # Static assets
-│   ├── icons/
-│   └── images/
-├── .env.example            # Environment variables template
+│   │
+│   └── pwa
+│       └── InstallPrompt.tsx
+│
+├── .env
+├── .gitignore
+├── index.html
+├── LICENSE
+├── README.md
 ├── package.json
+├── package-lock.json
+├── postcss.config.js
+├── tailwind.config.ts
+├── tsconfig.app.json
 ├── tsconfig.json
-├── vite.config.ts
-└── README.md
+├── tsconfig.node.json
+├── vercel.json
+└── vite.config.ts
+
 ```
 
 ---
