@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { ReportsList } from '@/components/reports/ReportsList';
-import { getReports, Report } from '@/services/reportService';
+import { getReports, Report, deleteReport } from '@/services/reportService';
 import { Loader2, AlertCircle, Plus } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Link } from 'react-router-dom';
@@ -35,6 +35,32 @@ const Reports = () => {
       setError('An error occurred while loading reports');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async (reportId: string) => {
+    // Confirmation dialog
+    if (!window.confirm('Are you sure you want to delete this report? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      console.log('Deleting report:', reportId);
+      const success = await deleteReport(reportId);
+      
+      if (success) {
+        // Remove the deleted report from the state
+        setReports(reports.filter(report => report.id !== reportId));
+        console.log('✅ Report deleted successfully');
+        
+        // Optional: Show success message
+        alert('Report deleted successfully!');
+      } else {
+        throw new Error('Delete operation returned false');
+      }
+    } catch (err) {
+      console.error('❌ Error deleting report:', err);
+      alert('Failed to delete the report. Please try again.');
     }
   };
 
@@ -92,7 +118,7 @@ const Reports = () => {
             </Link>
           </div>
         ) : (
-          <ReportsList reports={reports} />
+          <ReportsList reports={reports} onDelete={handleDelete} />
         )}
       </div>
     </Layout>

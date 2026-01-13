@@ -19,15 +19,17 @@ import {
   Eye,
   Sparkles,
   FileSearch,
+  Trash2,
 } from 'lucide-react';
 import { categoryLabels, statusLabels } from '@/data/mockData';
 import { Report } from '@/services/reportService';
 
 interface ReportsListProps {
   reports: Report[];
+  onDelete: (reportId: string) => void;
 }
 
-export function ReportsList({ reports }: ReportsListProps) {
+export function ReportsList({ reports, onDelete }: ReportsListProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -176,12 +178,24 @@ export function ReportsList({ reports }: ReportsListProps) {
                   </div>
                 </div>
 
-                <Link to={`/reports/${report.id}`}>
-                  <Button variant="outline" size="sm" className="w-full gap-2">
-                    <Eye className="h-4 w-4" />
-                    View Details
+                {/* Action Buttons */}
+                <div className="flex gap-2">
+                  <Link to={`/reports/${report.id}`} className="flex-1">
+                    <Button variant="outline" size="sm" className="w-full gap-2">
+                      <Eye className="h-4 w-4" />
+                      View Details
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => onDelete(report.id)}
+                    className="gap-2"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Delete
                   </Button>
-                </Link>
+                </div>
               </div>
             </CardContent>
           </Card>
